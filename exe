@@ -1,0 +1,1 @@
+gcc -o execute src/main.c src/Header.c && ./execute
