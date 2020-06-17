@@ -1,1 +1,5 @@
-WELCOME TO TEAM PROJECT
+init : initialization LCD 
+
+exe : comfile commend
+
+
