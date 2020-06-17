@@ -1,2 +1,2 @@
 WELCOME TO TEAM PROJECT
-Attand - Noh Yoonpyo
+Attand - 
