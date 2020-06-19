@@ -21,6 +21,8 @@ typedef unsigned char ubyte;
 
 unsigned short makepixel(ubyte r, ubyte g, ubyte b);
 
+//int _Line[1584];
+//int _Rectangle[1584];
 typedef struct _Point {
         int x;
         int y;
@@ -33,6 +35,6 @@ void clearLcd();
 
 void makeLineBox(Point start, Point end, unsigned short color);
 
-void PrintScreen(int a[], int size);
+void PrintScreen(int _Line[],int _Rectangle[], int size);
 
 

@@ -75,8 +75,10 @@ void makeLineBox(Point start, Point end, unsigned short color){
 }
 
 
-void PrintScreen(int a[], int size)
+void PrintScreen(int _Line[],int _Rectangle[], int size)
 {
+	int x = 4;
+	int y = 34;
 	int i,j;
 	int count = 0;
 	unsigned short red = makepixel(255,0,0);
@@ -84,9 +86,23 @@ void PrintScreen(int a[], int size)
 	{
 		for(j=0;j<72;j++)
 		{
-			if(a[count] == 1)
+			if(_Line[count] == 1)
 			{
-				offset = i * 320 + j;
+				offset = (y+i) * 320 + (x+j);
+				*(pfbdata + offset) = red;
+			}	
+			count++;	
+		}
+	}
+	y = 58;
+	count = 0;
+	for(i = 0;i<22;i++)
+	{
+		for(j=0;j<72;j++)
+		{
+			if(_Rectangle[count] == 1)
+			{
+				offset = (y+i) * 320 + (x+j);
 				*(pfbdata + offset) = red;
 			}	
 			count++;	
