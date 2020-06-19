@@ -1,5 +1,15 @@
 #include "../include/Header.h"
 extern int Screen[76800];
+
+unsigned short white = makepixel(255, 255, 255);
+unsigned short orange = makepixel(255, 128, 64);
+unsigned short red = makepixel(255, 0, 0);
+unsigned short green = makepixel(0, 255, 0);
+unsigned short yellow = makepixel(255, 255, 0);
+unsigned short darkblue = makepixel(0, 0, 128);
+unsigned short blue = makepixel(0, 0, 255);
+unsigned short black = makepixel(0, 0, 0);
+
 int main(void) {
         int pressure = -1;
         int ret, t, i, j;
