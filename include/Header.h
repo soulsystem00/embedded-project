@@ -48,6 +48,6 @@ void PrintScreen(int Screen[], int size);
 
 void FillScreen(unsigned short color);
 
-void SetColor(unsigned short color);
+void SetColor(unsigned short color, int PointX, int PointY);
 
 
