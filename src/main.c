@@ -11,6 +11,8 @@ int main(void) {
 	darkblue = makepixel(0,0,128);
 	blue = makepixel(0,0,255);
 	black = makepixel(0,0,0);
+	
+	unsigned short Color = red; //default color = red, 컬러 속성을 저장하는 값.
 
 
         int pressure = -1;
