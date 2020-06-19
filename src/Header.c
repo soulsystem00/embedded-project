@@ -99,11 +99,12 @@ void FillScreen(unsigned short color)
 	int i,j;
 	for(j = 4 ; j < 237 ; j++)
 		for(i = 80 ; i < 274 ; i++)
-			*(pfbdata + i + j * fbvar.xres) = color;
+			*(pfbdata + i + j * fbvar.xres) = color; //Draw 공간을 해당 color로 초기화
 }
 
 void SetColor(unsigned short color, int PointX, int PointY);
 {
 	//PointX와 PointY 위치 + main.c에서 color 속성을 지정하는 변수를 인자로 받음
 	// color button 값들 좌표 비교해서 해당 좌표에 있다면 그 색으로 변경.
+	// 구상중..
 }
