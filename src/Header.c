@@ -113,6 +113,8 @@ void SetColor(unsigned short color, int PointX, int PointY);
 void Line(unsigned short color)
 {
 	while(pressure == -1){ //화면에 펜을 딱 갖다댔을 때 처음 좌표를 읽습니다
+		//셀러브레이션 이후 프레셔 값이 -1이 되기 때문에 맨 처음 값을 가져올 수 있습니다.
+		// 다른 함수도 마지막에 pressure를 -1로 설정해야 작동 가능합니다.
 		read(fd, &ie, sizeof(struct input_event));
         	if (ie.type == 3) {
                 	if (ie.code == 0) {
