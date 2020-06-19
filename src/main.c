@@ -1,6 +1,5 @@
 #include "../include/Header.h"
-extern int _Line[1584];
-extern int _Rectangle[1584];
+extern int Screen[76800];
 int main(void) {
         int pressure = -1;
         int ret, t, i, j;
@@ -36,7 +35,7 @@ int main(void) {
         clearLcd();
         setCalibration();
         clearLcd();
-	PrintScreen(_Line,_Rectangle,sizeof(_Line)/sizeof(int));
+	PrintScreen(Screen,sizeof(Screen)/sizeof(int));
         unsigned short red = makepixel(255, 0, 0);
  while(1){
         read(fd, &ie, sizeof(struct input_event));

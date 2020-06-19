@@ -35,6 +35,6 @@ void clearLcd();
 
 void makeLineBox(Point start, Point end, unsigned short color);
 
-void PrintScreen(int _Line[],int _Rectangle[], int size);
+void PrintScreen(int Screen[], int size);
 
 
