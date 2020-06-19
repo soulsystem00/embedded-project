@@ -21,6 +21,15 @@ typedef unsigned char ubyte;
 
 unsigned short makepixel(ubyte r, ubyte g, ubyte b);
 
+unsigned short white;
+unsigned short orange;
+unsigned short red;
+unsigned short green;
+unsigned short yellow;
+unsigned short darkblue;
+unsigned short blue;
+unsigned short black;
+
 //int _Line[1584];
 //int _Rectangle[1584];
 typedef struct _Point {
