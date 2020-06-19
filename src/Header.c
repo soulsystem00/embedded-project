@@ -108,3 +108,61 @@ void SetColor(unsigned short color, int PointX, int PointY);
 	// color button 값들 좌표 비교해서 해당 좌표에 있다면 그 색으로 변경.
 	// 구상중..
 }
+
+
+void Line(unsigned short color)
+{
+	while(pressure == -1){ //화면에 펜을 딱 갖다댔을 때 처음 좌표를 읽습니다
+		read(fd, &ie, sizeof(struct input_event));
+        	if (ie.type == 3) {
+                	if (ie.code == 0) {
+                        	get.x = ie.value;
+                	}
+                	else if (ie.code == 1) {
+                        	get.y = ie.value;
+                	}
+                	else if (ie.code == 24) {
+				start.x = a*get.x+b*get.y+c; //선을 그을 때, 원점이 되는 좌표입니다.
+                                start.y = d*get.x+e*get.y+f;
+                        	pressure = ie.value;
+                        }
+                }
+        }
+	printf("%d %d\n", start.x, start.y); //확인용
+	while(1){
+		read(fd, &ie, sizeof(struct input_event)); //여기부터는, 펜을 계속 움직이면서 선을 그립니다.
+        	if (ie.type == 3) {
+                	if (ie.code == 0) {
+                        	get.x = ie.value;
+                	}
+                	else if (ie.code == 1) {
+                        	get.y = ie.value;
+                	}
+                	else if (ie.code == 24) {
+				end.x = a*get.x+b*get.y+c;
+                                end.y = d*get.x+e*get.y+f;
+                        	pressure = ie.value;
+				if(start.x == end.x){ //직선의 방정식을 사용했는데, 두 x값이 같으면 분모가 0이 되므로 따로 예외처리.
+					for(i=start.y;i<=end.y;i++)
+						*(pfbdata + i*fbvar.xres) = color;
+				}
+				else{
+					m = (end.y - start.y)/(end.x - start.x); //직선의 기울기값
+					if(end.x > start.x){
+						for(i=start.x;i<=end.x;i++)
+							*(pfbdata + i + i*m*320) = color;
+					}
+					else{
+						for(i=start.x;i>=end.x;i--)
+							*(pfbdata + i + i*m*fbvar.xres) = color;
+					}
+				} //제대로 찍히는 경우 : 원점의 x, y좌표보다 높은 곳으로 갈때(기울기가 1에 가까운 형태일 때만)
+				// 구현해야 할 점 : 펜을 움직일 때 마다 그려졌던 선 지우는 것
+				// + 좌표 계산에 대한 예외처리, 기울기가 변할때 등등.. 상당히 어렵습니다.
+					
+
+                        }
+                }
+		pressure = -1;
+        }
+}
