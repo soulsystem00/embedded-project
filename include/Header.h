@@ -46,8 +46,9 @@ void makeLineBox(Point start, Point end, unsigned short color);
 
 void PrintScreen(int Screen[], int size);
 
-void FillScreen(unsigned short color);
+void FillScreen(unsigned short color); //대충은 구현
 
-void SetColor(unsigned short color, int PointX, int PointY);
+void SetColor(unsigned short color, int PointX, int PointY); //미완성
 
+void Line(unsigned short color); //미
 
