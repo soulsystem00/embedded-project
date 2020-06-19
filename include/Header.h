@@ -46,4 +46,8 @@ void makeLineBox(Point start, Point end, unsigned short color);
 
 void PrintScreen(int Screen[], int size);
 
+void FillScreen(unsigned short color);
+
+void SetColor(unsigned short color);
+
 
