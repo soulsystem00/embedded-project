@@ -73,3 +73,23 @@ void makeLineBox(Point start, Point end, unsigned short color){
                 *(pfbdata + offset) = color;
         }
 }
+
+
+void PrintScreen(int a[], int size)
+{
+	int i,j;
+	int count = 0;
+	unsigned short red = makepixel(255,0,0);
+	for(i = 0;i<22;i++)
+	{
+		for(j=0;j<72;j++)
+		{
+			if(a[count] == 1)
+			{
+				offset = i * 320 + j;
+				*(pfbdata + offset) = red;
+			}	
+			count++;	
+		}
+	}
+}
