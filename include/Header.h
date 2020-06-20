@@ -46,9 +46,11 @@ void makeLineBox(Point start, Point end, unsigned short color);
 
 void PrintScreen(int Screen[], int size);
 
-void FillScreen(unsigned short color); //대충은 구현
+void FillScreen(unsigned short color); //대충은 구현, 그림판에 해당 color로 전부 칠하는 함수 (clearLcd() 기능과 비슷합니다.)
 
-void SetColor(unsigned short color, int PointX, int PointY); //미완성
+void SetColor(unsigned short color, int PointX, int PointY); //미완성, 현재 그림판의 color를 설정하는 함수
 
-void Line(unsigned short color); //미
+void Line(unsigned short color); //미완성, 직선을 긋는 함수
+
+void FreeDraw(unsigned short color); //자유롭게 그림을 그리는 함수
 
