@@ -13,9 +13,7 @@ int main(void) {
 	black = makepixel(0,0,0);
 
 
-        int pressure = -1;
-        int ret, t, i, j;
-        Point get, start, end;
+        pressure = -1;
 
         int x1, x2, y1, y2;
         fbfd = open(FBDEVFILE, O_RDWR);
@@ -48,48 +46,12 @@ int main(void) {
         setCalibration();
         clearLcd();
 	PrintScreen(Screen,sizeof(Screen)/sizeof(int));
- while(1){
-        read(fd, &ie, sizeof(struct input_event));
-        if (ie.type == 3) {
-                if (ie.code == 0) {
-                        get.x = ie.value;
-                }
-                else if (ie.code == 1) {
-                        get.y = ie.value;
-                }
-                else if (ie.code == 24) {
-                        pressure = ie.value;
-                        if (pressure==0) {
-                                //printf("start\n");
-                                start.x = a*get.x+b*get.y+c;
-                                start.y = d*get.x+e*get.y+f;
-                                break;
-                        }
-                }
+ 	while(1)
+	{
+		FreeDraw(black);
         }
-        }
-while(1){
-        read(fd, &ie, sizeof(struct input_event));
-        if (ie.type == 3) {
-                if (ie.code == 0) {
-                        get.x = ie.value;
-                }
-                else if (ie.code == 1) {
-                        get.y = ie.value;
-                }
-                else if (ie.code == 24) {
-                        pressure = ie.value;
-                        if (pressure==0) {
-                                //printf("start\n");
-                                end.x = a*get.x+b*get.y+c;
-                                end.y = d*get.x+e*get.y+f;
-                                break;
-                        }
-                }
-        }
-        }
+        
 
-        makeLineBox(start, end, red);
 
         close(fd);
         close(fbfd);

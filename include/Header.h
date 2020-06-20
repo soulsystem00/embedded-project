@@ -37,6 +37,9 @@ typedef struct _Point {
         int y;
 }Point;
 
+int pressure;
+int ret, t, i, j;
+Point get, start, end;
 
 void setCalibration();
 
@@ -45,5 +48,5 @@ void clearLcd();
 void makeLineBox(Point start, Point end, unsigned short color);
 
 void PrintScreen(int Screen[], int size);
-
+void FreeDraw(unsigned short color);
 

@@ -74,6 +74,23 @@ void makeLineBox(Point start, Point end, unsigned short color){
         }
 }
 
+void FreeDraw(unsigned short color)
+{
+	read(fd, &ie, sizeof(struct input_event));
+	if(ie.type == 3)
+	{
+		if(ie.code == 0) get.x = ie.value;
+		if(ie.code == 1) get.y = ie.value;
+		if(ie.code == 24)
+		{
+			start.x = a*get.x+b*get.y+c;
+			start.y = d*get.x+e*get.y+f;
+			offset = start.y * 320 + start.x;
+			*(pfbdata + offset) = black;
+		}
+	}
+}
+
 
 void PrintScreen(int Screen[], int size)
 {
