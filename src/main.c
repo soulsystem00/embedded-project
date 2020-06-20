@@ -80,8 +80,7 @@ int main(void) {
 			printf("start Line\n");
 			//TODO("implement Line Function")
 
-			//Line(CurrentColor);
-			goto start;
+			Line(CurrentColor);
 		}
 		else if(ShapeMod == 1)
 		{
