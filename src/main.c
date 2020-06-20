@@ -88,8 +88,8 @@ int main(void) {
 			printf("start Rectangle\n");
 			//TODO("implement Rectangle Function")
 			
-			//Rectangle(CurrentColor);
-			goto start;
+			Rectangle(CurrentColor);
+			//goto start;
 		}
 		else if(ShapeMod == 2)
 		{

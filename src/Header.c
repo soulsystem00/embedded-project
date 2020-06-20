@@ -264,9 +264,58 @@ int setMod(Point touch)
 }
 
 void Line(unsigned short CurrentColor){/* implement the function on here */}
-void Rectangle(unsigned short CurrentColor){/* implement the function on here */}
+
 void Oval(unsigned short CurrentColor){/* implement the function on here */}
 void Selete(){/* implement the function on here */}
+
+void Rectangle(unsigned short CurrentColor)
+{
+	read(fd, &ie, sizeof(struct input_event));
+	
+	printf("type = %d, code = %d, value = %d\n",ie.type,ie.code,ie.value);
+	if(ie.type == 3)
+	{
+		if(ie.code == 0) get.x = ie.value;
+		if(ie.code == 1) get.y = ie.value;
+		if(ie.code == 24)
+		{
+			pressure = ie.value;
+			
+			start.x = a*get.x+b*get.y+c;
+			start.y = d*get.x+e*get.y+f;
+			else {goto hello;}
+			while(pressure != 0)
+			{
+				
+				read(fd, &ie, sizeof(struct input_event));
+				if(ie.type == 3)
+				{
+					if(ie.code == 0) get.x = ie.value;
+					if(ie.code == 1) get.y = ie.value;
+					if(ie.code == 24)
+					{
+	if((end.x>=80 && end.x<=273) && (end.y>=4 && end.y<=236) && (start.x>=80 && start.x<=273) && (start.y>=4 && start.y<=236))
+						{makeLineBox(start,end,white);}
+						int pressure2 = ie.value;
+						if(pressure2 == 0) break;
+						end.x = a*get.x+b*get.y+c;
+						end.y = d*get.x+e*get.y+f;
+					
+					
+					}
+					printf("x = %d, y = %d\n",end.x,end.y);
+					if((end.x>=80 && end.x<=273) && (end.y>=4 && end.y<=236) && (start.x>=80 && start.x<=273) && (start.y>=4 && start.y<=236))
+						{makeLineBox(start,end,CurrentColor);}
+						
+				}
+			}
+		}
+	}
+	printf("x = %d, y = %d\n",start.x,start.y);
+if((end.x>=80 && end.x<=273) && (end.y>=4 && end.y<=236) && (start.x>=80 && start.x<=273) && (start.y>=4 && start.y<=236))
+						{makeLineBox(start,end,CurrentColor);}
+}
+
 void Erase(){
 read(fd, &ie, sizeof(struct input_event));
 	
