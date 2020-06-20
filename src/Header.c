@@ -246,3 +246,9 @@ int setMod(Point touch)
 	
 	return 0;
 }
+
+void Line(CurrentColor){/* implement the function on here */}
+void Rectangle(CurrentColor){/* implement the function on here */}
+void Oval(CurrentColor){/* implement the function on here */}
+void Selete(){/* implement the function on here */}
+void Erase(){/* implement the function on here */}

@@ -57,3 +57,8 @@ void FreeDraw(unsigned short color);
 void clearDraw();
 int setMod(Point touch);
 
+void Line(CurrentColor);
+void Rectangle(CurrentColor);
+void Oval(CurrentColor);
+void Selete();
+void Erase();

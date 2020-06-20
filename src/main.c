@@ -79,18 +79,24 @@ int main(void) {
 		{
 			printf("start Line\n");
 			//TODO("implement Line Function")
+
+			//Line(CurrentColor);
 			goto start;
 		}
 		else if(ShapeMod == 1)
 		{
 			printf("start Rectangle\n");
 			//TODO("implement Rectangle Function")
+			
+			//Rectangle(CurrentColor);
 			goto start;
 		}
 		else if(ShapeMod == 2)
 		{
 			printf("start Oval\n");
 			//TODO("implement Oval Function")
+
+			//Oval(CurrentColor);
 			goto start;
 		}
 		else if(ShapeMod == 3)
@@ -102,12 +108,16 @@ int main(void) {
 		{
 			printf("start Select\n");
 			//TODO("implement Select Function")
+
+			//Selete();
 			goto start;
 		}	
 		else if(ShapeMod == 5)
 		{
 			printf("start Erase\n");
 			//TODO("implement Erase Function")
+
+			//Erase();
 			goto start;
 		}
 		else if(ShapeMod == 6)
