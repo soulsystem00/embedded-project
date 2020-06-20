@@ -29,7 +29,7 @@ unsigned short yellow;
 unsigned short darkblue;
 unsigned short blue;
 unsigned short black;
-
+unsigned short CurrentColor;
 int ShapeMod;
 int ColorMod;
 int DrawMod;
@@ -50,7 +50,10 @@ void setCalibration();
 void clearLcd();
 
 void makeLineBox(Point start, Point end, unsigned short color);
+void makeLineBox2(int sx,int sy, int ex,int ey, unsigned short color);
 
 void PrintScreen(int Screen[], int size);
 void FreeDraw(unsigned short color);
+void clearDraw();
+int setMod(Point touch);
 
