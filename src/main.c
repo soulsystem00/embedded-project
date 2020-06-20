@@ -48,6 +48,7 @@ int main(void) {
         setCalibration();
         clearLcd();
 	PrintScreen(Screen,sizeof(Screen)/sizeof(int));
+	FillinitColor();
 	start:
 	printf("start touch\n");
  	while(1)

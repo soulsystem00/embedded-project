@@ -56,7 +56,7 @@ void PrintScreen(int Screen[], int size);
 void FreeDraw(unsigned short color);
 void clearDraw();
 int setMod(Point touch);
-
+void FillinitColor();
 void Line(unsigned short CurrentColor);
 void Rectangle(unsigned short CurrentColor);
 void Oval(unsigned short CurrentColor);

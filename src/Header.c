@@ -60,13 +60,13 @@ void makeLineBox(Point start, Point end, unsigned short color){
                 start.y = end.y;
                 end.y = tmp;
         }
-        for (j = start.x; j < end.x; j++) {
+        for (j = start.x; j <= end.x; j++) {
                 offset = start.y * 320 + j;
                 *(pfbdata + offset) = color;
                 offset = end.y * 320 + j;
                 *(pfbdata + offset) = color;
         }
-        for (i = start.y; i < end.y; i++) {
+        for (i = start.y; i <= end.y; i++) {
                 offset = i * 320 + start.x;
                 *(pfbdata + offset) = color;
                 offset = i * 320 + end.x;
@@ -86,13 +86,13 @@ void makeLineBox2(int sx,int sy, int ex,int ey, unsigned short color){
                 sy = ey;
                 ey = tmp;
         }
-        for (j = sx; j < ex; j++) {
+        for (j = sx; j <= ex; j++) {
                 offset = sy * 320 + j;
                 *(pfbdata + offset) = color;
                 offset = ey * 320 + j;
                 *(pfbdata + offset) = color;
         }
-        for (i = sy; i < ey; i++) {
+        for (i = sy; i <= ey; i++) {
                 offset = i * 320 + sx;
                 *(pfbdata + offset) = color;
                 offset = i * 320 + ex;
@@ -254,7 +254,7 @@ int setMod(Point touch)
 	makeLineBox2(297,87,315,105,black);
 
 	makeLineBox2(280,154,314,174,black);
-	makeLineBox2(280,178,315,199,black);
+	makeLineBox2(280,178,314,199,black);
 
 	makeLineBox(ShapeStart,ShapeEnd,red);
 	makeLineBox(ColorStart,ColorEnd,red);
@@ -370,7 +370,67 @@ void Line(unsigned short CurrentColor){ //Function Line
 		}//end of ie. event handler
 	}// end of while
 }//end of fun Line
-
+void FillinitColor() {
+        int i, j;
+	int x = 278;
+	int y = 27;
+        for (i = 0; i <= 16; i++) {
+                for (j = 0; j <= 16; j++) {
+                        offset = (y + i) * 320 + (x + j);
+                        *(pfbdata + offset) = white;
+                }
+        }
+	y = y + 21;
+	for (i = 0; i <= 16; i++) {
+                for (j = 0; j <= 16; j++) {
+                        offset = (y + i) * 320 + (x + j);
+                        *(pfbdata + offset) = red;
+                }
+        }
+	y = y + 20;
+	for (i = 0; i <= 16; i++) {
+                for (j = 0; j <= 16; j++) {
+                        offset = (y + i) * 320 + (x + j);
+                        *(pfbdata + offset) = yellow;
+                }
+        }
+	y = y + 20;
+	for (i = 0; i <= 16; i++) {
+                for (j = 0; j <= 16; j++) {
+                        offset = (y + i) * 320 + (x + j);
+                        *(pfbdata + offset) = blue;
+                }
+        }
+	x = 298;
+	y = 27;
+	for (i = 0; i <= 16; i++) {
+                for (j = 0; j <= 16; j++) {
+                        offset = (y + i) * 320 + (x + j);
+                        *(pfbdata + offset) = orange;
+                }
+        }
+	y = y + 21;
+	for (i = 0; i <= 16; i++) {
+                for (j = 0; j <= 16; j++) {
+                        offset = (y + i) * 320 + (x + j);
+                        *(pfbdata + offset) = green;
+                }
+        }
+	y = y + 20;
+	for (i = 0; i <= 16; i++) {
+                for (j = 0; j <= 16; j++) {
+                        offset = (y + i) * 320 + (x + j);
+                        *(pfbdata + offset) = darkblue;
+                }
+        }
+	y = y + 20;
+	for (i = 0; i <= 16; i++) {
+                for (j = 0; j <= 16; j++) {
+                        offset = (y + i) * 320 + (x + j);
+                        *(pfbdata + offset) = black;
+                }
+        }
+}
 void Oval(unsigned short CurrentColor){/* implement the function on here */}
 void Selete(){/* implement the function on here */}
 
