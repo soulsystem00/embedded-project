@@ -30,6 +30,10 @@ unsigned short darkblue;
 unsigned short blue;
 unsigned short black;
 
+int ShapeMod;
+int ColorMod;
+int DrawMod;
+
 //int _Line[1584];
 //int _Rectangle[1584];
 typedef struct _Point {

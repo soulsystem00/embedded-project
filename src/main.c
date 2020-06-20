@@ -14,7 +14,9 @@ int main(void) {
 
 
         pressure = -1;
-
+	ShapeMod = 0;
+	ColorMod = 0;
+	DrawMod = 0;
         int x1, x2, y1, y2;
         fbfd = open(FBDEVFILE, O_RDWR);
 
