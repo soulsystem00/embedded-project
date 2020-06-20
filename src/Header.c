@@ -171,3 +171,28 @@ void Line(unsigned short color)
 		pressure = -1;
         }
 }
+
+void FreeDraw(unsigned short color){ //자유롭게 그림을 그리는 함수 입니다.
+	while(1){
+		read(fd, &ie, sizeof(struct input_event));
+		
+        	if (ie.type == 3) {
+                	if (ie.code == 0) {
+                        	get.x = ie.value;
+                	}
+                	else if (ie.code == 1) {
+                        	get.y = ie.value;
+                	}
+                	else if (ie.code == 24) {
+                        	pressure = ie.value;
+				while(pressure != 0)
+					*(pfbdata + get.x + get.y * fbvar.xres) = color; //펜을 놓을 때 까지 해당 좌표에
+				// 해당 색을 칠합니다.
+
+                        }
+                }
+		pressure = -1;
+        }
+	
+	
+}
