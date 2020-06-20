@@ -24,3 +24,5 @@ read함수를 while 문 안에다가 넣었습니다.
 
 +해당 수정부분이 어딘지는 commit 확인해 주시고 
 위에 서술한 내용도 확인 부탁드립니다.
+
+++ add mainpage color
