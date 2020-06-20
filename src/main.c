@@ -117,8 +117,7 @@ int main(void) {
 			printf("start Erase\n");
 			//TODO("implement Erase Function")
 
-			//Erase();
-			goto start;
+			Erase();
 		}
 		else if(ShapeMod == 6)
 		{

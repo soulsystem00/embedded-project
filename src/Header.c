@@ -247,8 +247,26 @@ int setMod(Point touch)
 	return 0;
 }
 
-void Line(CurrentColor){/* implement the function on here */}
-void Rectangle(CurrentColor){/* implement the function on here */}
-void Oval(CurrentColor){/* implement the function on here */}
+void Line(unsigned short CurrentColor){/* implement the function on here */}
+void Rectangle(unsigned short CurrentColor){/* implement the function on here */}
+void Oval(unsigned short CurrentColor){/* implement the function on here */}
 void Selete(){/* implement the function on here */}
-void Erase(){/* implement the function on here */}
+void Erase(){
+read(fd, &ie, sizeof(struct input_event));
+	
+	if(ie.type == 3)
+	{
+		if(ie.code == 0) get.x = ie.value;
+		if(ie.code == 1) get.y = ie.value;
+		if(ie.code == 24)
+		{
+			start.x = a*get.x+b*get.y+c;
+			start.y = d*get.x+e*get.y+f;
+			if((start.x>=80 && start.x<=273) && (start.y >=4 && start.y<=236))
+			{
+				offset = start.y * 320 + start.x;
+				*(pfbdata + offset) = white;
+			}
+		}
+	}
+}
