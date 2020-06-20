@@ -134,6 +134,8 @@ void Line(unsigned short color)
 	while(1){
 		read(fd, &ie, sizeof(struct input_event)); //여기부터는, 펜을 계속 움직이면서 선을 그립니다.
         	if (ie.type == 3) {
+			for(i=start.x;i<end.x;i++)
+				*(pfbdata + i + i*(int)m*320) = 0; //펜이 움직일 때마다 그렸던 선을 지움
                 	if (ie.code == 0) {
                         	get.x = ie.value;
                 	}
@@ -144,23 +146,24 @@ void Line(unsigned short color)
 				end.x = a*get.x+b*get.y+c;
                                 end.y = d*get.x+e*get.y+f;
                         	pressure = ie.value;
-				if(start.x == end.x){ //직선의 방정식을 사용했는데, 두 x값이 같으면 분모가 0이 되므로 따로 예외처리.
-					for(i=start.y;i<=end.y;i++)
-						*(pfbdata + i*fbvar.xres) = color;
-				}
-				else{
-					m = (end.y - start.y)/(end.x - start.x); //직선의 기울기값
-					if(end.x > start.x){
-						for(i=start.x;i<=end.x;i++)
-							*(pfbdata + i + i*m*320) = color;
-					}
-					else{
-						for(i=start.x;i>=end.x;i--)
-							*(pfbdata + i + i*m*fbvar.xres) = color;
-					}
-				} //제대로 찍히는 경우 : 원점의 x, y좌표보다 높은 곳으로 갈때(기울기가 1에 가까운 형태일 때만)
-				// 구현해야 할 점 : 펜을 움직일 때 마다 그려졌던 선 지우는 것
-				// + 좌표 계산에 대한 예외처리, 기울기가 변할때 등등.. 상당히 어렵습니다.
+				if (start.x > end.x) {
+                			tmp = start.x;
+                			start.x = end.x;
+                			end.x = tmp;
+        			}
+        			if (start.y > end.y) {
+                			tmp = start.y;
+                			start.y = end.y;
+                			end.y = tmp;
+        			}
+
+				if(start.x != end.x){
+					m = (end.y - start.y)/(end.x - start.x);
+					for(i=start.x;i<end.x;i++)
+						*(pfbdata + i + i*(int)m*320) = red;
+				} //제대로 찍히는 경우 : 원점의 x, y좌표보다 높은 곳으로 갈때
+				// 개선 해야 할 부분 : 기울기가 정수값만 가능해서 직선 그리는 게 제한적,
+				// + 나중에 찍힌 점이 원점보다 작은 값일 때 예외처리 + x값이 서로 같을 때 예외처리
 					
 
                         }
