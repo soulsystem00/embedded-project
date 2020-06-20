@@ -267,18 +267,22 @@ void Line(unsigned short CurrentColor){ //Function Line
 	int dx, dy, count, addx, addy; //int for calculate position
 	int i, x1, y1; // i -> for loop, x1, y1 -> set start position
 	int chk = 0; // 0 -> no input(start position is null) , 1 -> start position is valid
-	read(fd, &ie, sizeof(struct input_event));
+	
 	while(chk==0){ //set start position when touch input hits
+		read(fd, &ie, sizeof(struct input_event));
 		if (ie.type == 3) {
 			if (ie.code == 0) { get.x = ie.value; }
 			else if (ie.code == 1) { get.y = ie.value; }
-			if ((start.x >= 80 && start.x <= 273) && (start.y >= 4 && start.y <= 236)) {
+			else if (ie.code == 24) 
+			{
 				start.x = a * get.x + b * get.y + c;
 				start.y = d * get.x + e * get.y + f;
 				chk = 1;
 			}
 		}
 	}
+
+	printf("%d %d\n",dx,dy);
 	while(chk != 0){ //calculate position for drawing Line
 		x1 = start.x; y1 = start.y;
 		if (ie.type == 3) {
@@ -385,7 +389,6 @@ void Rectangle(unsigned short CurrentColor)
 			
 			start.x = a*get.x+b*get.y+c;
 			start.y = d*get.x+e*get.y+f;
-			else {goto hello;}
 			while(pressure != 0)
 			{
 				
