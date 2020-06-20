@@ -100,6 +100,44 @@ void makeLineBox2(int sx,int sy, int ex,int ey, unsigned short color){
         }
 }
 
+void makeLineBox3(int sx,int sy, int ex,int ey, int ary[194][233]){
+        int i, j, tmp;
+	for(i = 0;i<194;i++)
+	{
+		for(j = 0;j<233;j++)
+		{
+			ary[i][j] = 0;
+		}
+	}
+        if (sx > ex) {
+                tmp = sx;
+                sx = ex;
+                ex = tmp;
+        }
+        if (sy > ey) {
+                tmp = sy;
+                sy = ey;
+                ey = tmp;
+        }
+        for (j = sx; j <= ex; j++) {
+		ary[j][sy] = 1;
+		ary[j][ey] = 1;
+                /*offset = sy * 320 + j;
+                *(pfbdata + offset) = color;
+                offset = ey * 320 + j;
+                *(pfbdata + offset) = color;*/
+        }
+        for (i = sy; i <= ey; i++) {
+		ary[sx][i] = 1;
+		ary[ex][i] = 1;
+                /*offset = i * 320 + sx;
+                *(pfbdata + offset) = color;
+                offset = i * 320 + ex;
+                *(pfbdata + offset) = color;*/
+        }
+}
+
+
 void FreeDraw(unsigned short color)
 {
 	read(fd, &ie, sizeof(struct input_event));
@@ -156,6 +194,27 @@ void PrintScreen(int Screen[], int size)
 		}
 	}
 }
+
+void PrintAry(int Screen[194][233], unsigned short color)
+{
+	int i,j;
+	int count = 0;
+	
+	for(i = 0;i<233;i++)
+	{
+		for(j=0;j<194;j++)
+		{
+			offset = (i+4) * 320 + (j+80);
+			if(Screen[j][i] == 1)
+			{
+				*(pfbdata + offset) = color;
+			}
+			else
+				*(pfbdata + offset) = white;
+		}
+	}
+}
+
 void clearDraw() {
         int i, j;
         for (i = 4; i <= 236; i++) {
@@ -436,6 +495,16 @@ void Selete(){/* implement the function on here */}
 
 void Rectangle(unsigned short CurrentColor)
 {
+	int sx,sy,ex,ey;
+	int ary[194][233];
+	int i,j;
+	for(i = 0;i<194;i++)
+	{
+		for(j = 0;j<233;j++)
+		{
+			ary[i][j] = 0;
+		}
+	}
 	read(fd, &ie, sizeof(struct input_event));
 	
 	printf("type = %d, code = %d, value = %d\n",ie.type,ie.code,ie.value);
@@ -449,6 +518,8 @@ void Rectangle(unsigned short CurrentColor)
 			
 			start.x = a*get.x+b*get.y+c;
 			start.y = d*get.x+e*get.y+f;
+			sx = start.x - 80;
+			sy = start.y - 4;
 			while(pressure != 0)
 			{
 				
@@ -459,26 +530,26 @@ void Rectangle(unsigned short CurrentColor)
 					if(ie.code == 1) get.y = ie.value;
 					if(ie.code == 24)
 					{
-	if((end.x>=80 && end.x<=273) && (end.y>=4 && end.y<=236) && (start.x>=80 && start.x<=273) && (start.y>=4 && start.y<=236))
-						{makeLineBox(start,end,white);}
 						int pressure2 = ie.value;
 						if(pressure2 == 0) break;
 						end.x = a*get.x+b*get.y+c;
 						end.y = d*get.x+e*get.y+f;
+						ex = end.x - 80;
+						ey = end.y - 4;
 					
 					
 					}
 					printf("x = %d, y = %d\n",end.x,end.y);
 					if((end.x>=80 && end.x<=273) && (end.y>=4 && end.y<=236) && (start.x>=80 && start.x<=273) && (start.y>=4 && start.y<=236))
-						{makeLineBox(start,end,CurrentColor);}
+						{makeLineBox3(sx,sy,ex,ey,ary);PrintAry(ary,CurrentColor);}
 						
 				}
 			}
 		}
 	}
 	printf("x = %d, y = %d\n",start.x,start.y);
-if((end.x>=80 && end.x<=273) && (end.y>=4 && end.y<=236) && (start.x>=80 && start.x<=273) && (start.y>=4 && start.y<=236))
-						{makeLineBox(start,end,CurrentColor);}
+/*if((end.x>=80 && end.x<=273) && (end.y>=4 && end.y<=236) && (start.x>=80 && start.x<=273) && (start.y>=4 && start.y<=236))
+						{makeLineBox(start,end,CurrentColor);}*/
 }
 
 void Erase(){

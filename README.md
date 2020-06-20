@@ -26,3 +26,5 @@ read함수를 while 문 안에다가 넣었습니다.
 위에 서술한 내용도 확인 부탁드립니다.
 
 ++ add mainpage color
+
++++ add Rectangle but, very slow need edit
