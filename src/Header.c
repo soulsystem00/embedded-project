@@ -114,7 +114,23 @@ void FreeDraw(unsigned short color)
 			start.y = d*get.x+e*get.y+f;
 			if((start.x>=80 && start.x<=273) && (start.y >=4 && start.y<=236))
 			{
+				offset = (start.y + 1) * 320 + (start.x + 1);
+				*(pfbdata + offset) = color;
+				offset = (start.y +1) * 320 + start.x;
+				*(pfbdata + offset) = color;
+				offset = start.y * 320 + (start.x+1);
+				*(pfbdata + offset) = color;
 				offset = start.y * 320 + start.x;
+				*(pfbdata + offset) = color;
+				offset = (start.y -1) * 320 + (start.x -1);
+				*(pfbdata + offset) = color;
+				offset = (start.y -1) * 320 + start.x;
+				*(pfbdata + offset) = color;
+				offset = start.y * 320 + (start.x-1);
+				*(pfbdata + offset) = color;
+				offset = (start.y - 1) * 320 + (start.x + 1);
+				*(pfbdata + offset) = color;
+				offset = (start.y +1) * 320 + (start.x-1);
 				*(pfbdata + offset) = color;
 			}
 		}
@@ -264,7 +280,23 @@ read(fd, &ie, sizeof(struct input_event));
 			start.y = d*get.x+e*get.y+f;
 			if((start.x>=80 && start.x<=273) && (start.y >=4 && start.y<=236))
 			{
+				offset = (start.y + 1) * 320 + (start.x + 1);
+				*(pfbdata + offset) = white;
+				offset = (start.y +1) * 320 + start.x;
+				*(pfbdata + offset) = white;
+				offset = start.y * 320 + (start.x+1);
+				*(pfbdata + offset) = white;
 				offset = start.y * 320 + start.x;
+				*(pfbdata + offset) = white;
+				offset = (start.y -1) * 320 + (start.x -1);
+				*(pfbdata + offset) = white;
+				offset = (start.y -1) * 320 + start.x;
+				*(pfbdata + offset) = white;
+				offset = start.y * 320 + (start.x-1);
+				*(pfbdata + offset) = white;
+				offset = (start.y - 1) * 320 + (start.x + 1);
+				*(pfbdata + offset) = white;
+				offset = (start.y +1) * 320 + (start.x-1);
 				*(pfbdata + offset) = white;
 			}
 		}
