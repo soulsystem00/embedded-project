@@ -30,6 +30,7 @@ unsigned short darkblue;
 unsigned short blue;
 unsigned short black;
 unsigned short CurrentColor;
+unsigned short tmpColor;
 int ShapeMod;
 int ColorMod;
 int DrawMod;

@@ -612,7 +612,15 @@ void Fill(unsigned short CurrentColor)
 				start.y = d*get.x+e*get.y+f;
 				printf("%d %d\n",start.x,start.y);
 				if((start.x>=80 && start.x<=273) && (start.y >=4 && start.y<=236))
-					{FillFunction(start.x,start.y,CurrentColor);}
+					{	
+						offset = start.y *320 + start.x;
+						tmpColor = *(pfbdata + offset);
+						printf("%u\n", tmpColor);
+						printf("Fill Function start\n");
+						
+						FillFunction(start.x,start.y,CurrentColor);
+						printf("Fill Function inininin\n");
+					}
 				else
 					{return;}
 			}
@@ -623,17 +631,19 @@ void Fill(unsigned short CurrentColor)
 
 void FillFunction(int x, int y,unsigned short CurrentColor)
 {
-	if((x>=80 && x<=273) && (y >=4 && y<=236))
+	
+	if(((x>=80 && x<=273) && (y >=4 && y<=236)) && (tmpColor != CurrentColor))
 	{
-		offset = y *320 + x;
-		if(*(pfbdata + offset) != CurrentColor)
-			{
-				*(pfbdata + offset) = CurrentColor;
-				FillFunction(x,y+1,CurrentColor);
-				FillFunction(x,y-1,CurrentColor);
-				FillFunction(x+1,y,CurrentColor);
-				FillFunction(x-1,y,CurrentColor);
-			}
+		
+		offset = y * 320 + x;
+		if(*(pfbdata + offset) == tmpColor)
+		{
+			*(pfbdata + offset) = CurrentColor;
+			FillFunction(x,y+1,CurrentColor);
+			FillFunction(x,y-1,CurrentColor);
+			FillFunction(x+1,y,CurrentColor);
+			FillFunction(x-1,y,CurrentColor);
+		}
 		else return;
 	}
 	else return;
