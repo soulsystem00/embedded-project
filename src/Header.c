@@ -322,30 +322,34 @@ int setMod(Point touch)
 	return 0;
 }
 
-void Line(unsigned short CurrentColor){ //Function Line
-	int dx, dy, count, addx, addy; //int for calculate position
-	int i, x1, y1; // i -> for loop, x1, y1 -> set start position
-	int chk = 0; // 0 -> no input(start position is null) , 1 -> start position is valid
+void Line(unsigned short CurrentColor) {
+	int count = 0;
+	int addx = 0;
+	int addy = 0;
+	int i, x1, y1;
+	int chk = 0;
+	int dx = 0; int dy =0;
 	
-	while(chk==0){ //set start position when touch input hits
+	while(chk==0){
 		read(fd, &ie, sizeof(struct input_event));
 		if (ie.type == 3) {
 			if (ie.code == 0) { get.x = ie.value; }
 			else if (ie.code == 1) { get.y = ie.value; }
-			else if (ie.code == 24) 
-			{
+			else if (ie.code == 24) {
 				start.x = a * get.x + b * get.y + c;
 				start.y = d * get.x + e * get.y + f;
-				chk = 1;
+				if((start.x>=80 && start.x<=273) && (start.y >=4 && start.y<=236)){
+				chk = 1; 
+				}
 			}
 		}
 	}
-
-	printf("%d %d\n",dx,dy);
-	while(chk != 0){ //calculate position for drawing Line
+	while(chk != 0){
+		read(fd, &ie, sizeof(struct input_event));
 		x1 = start.x; y1 = start.y;
+		
 		if (ie.type == 3) {
-			if (dx >= dy) { //erase if pen move
+			if (dx >= dy) {
 				for (i = 0; i < dx; i++) {
 					x1 += addx;
 					count += dy;
@@ -353,35 +357,34 @@ void Line(unsigned short CurrentColor){ //Function Line
 						y1 += addy;
 						count -= dx;
 					}
-					*(pfbdata + x1 + y1 * 320) = 0;
+					*(pfbdata + x1 + y1 * 320) = white;
 				}
 			}//end of dx >= dy
-			else {
+			else {	
 				for (i = 0; i < dy; i++) {
 					y1 += addy; count += dx;
 					if (count >= dy) {
 						x1 += addx; count -= dy;
 					}
-					*(pfbdata + x1 + y1 * 320) = 0;
+					*(pfbdata + x1 + y1 * 320) = white;
 				}
-			}//end of else //erase if pen move
+			}//end of else
 			if (ie.code == 0) { get.x = ie.value; }
 			else if (ie.code == 1) { get.y = ie.value; }
 			else if (ie.code == 24) {
-				if ((start.x >= 80 && start.x <= 273) && (start.y >= 4 && start.y <= 236)) {
+				
 					end.x = a * get.x + b * get.y + c;
 					end.y = d * get.x + e * get.y + f;
 					pressure = ie.value;
 					dx = end.x - start.x; dy = end.y - start.y;
 					x1 = start.x; y1 = start.y;
+					if (dx < 0) { addx = -1; dx = -dx; }
+					else { addx = 1; }
+					if (dy < 0) { addy = -1;  dy = -dy; }
+					else { addy = 1; }
 					
-					//여기부터는 알고리즘 부분. 그대로 유지하면 됩니다.
-					if (dx < 0) { addx = -1; dx = -dx; } //기울기가 음수일 때의 처리
-					else { addx = 1; } //양수라면 그대로.
-					if (dy < 0) { addy = -1;  dy = -dy; } //기울기가 음수일 때의 처리
-					else { addy = 1; } //양수라면 그대로.
-					if (dx >= dy) { // 기울기가 1보다 작은 경우
-						for (i = 0; i < dx; i++) { 
+					if (dx >= dy) {
+						for (i = 0; i < dx; i++) {
 							x1 += addx;
 							count += dy;
 							if (count >= dx) {
@@ -391,7 +394,7 @@ void Line(unsigned short CurrentColor){ //Function Line
 							*(pfbdata + x1 + y1 * 320) = CurrentColor;
 						}
 					}//end of dx >= dy
-					else { //기울기가 1보다 큰 경우
+					else {
 						for (i = 0; i < dy; i++) {
 							y1 += addy; count += dx;
 							if (count >= dy) {
@@ -400,8 +403,9 @@ void Line(unsigned short CurrentColor){ //Function Line
 							*(pfbdata + x1 + y1 * 320) = CurrentColor;
 						}
 					}//end of else
-					if (pressure == 0) { //펜을 뗐을 때, 해당 좌표에 대한 그래프를 남기고 반복 종료.
-						x1 = start.x; y1 = start.y; //그래프를 그리기 위해 x1, y1 값 시작점으로 초기화
+
+					if (pressure == 0) {
+						x1 = start.x; y1 = start.y;
 						if (dx >= dy) {
 							for (i = 0; i < dx; i++) {
 								x1 += addx;
@@ -425,7 +429,7 @@ void Line(unsigned short CurrentColor){ //Function Line
 						break;
 					}
 				}
-			}
+			
 		}//end of ie. event handler
 	}// end of while
 }//end of fun Line
