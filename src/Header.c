@@ -351,32 +351,36 @@ void Line(unsigned short CurrentColor) {
 		x1 = start.x; y1 = start.y;
 		
 		if (ie.type == 3) {
-			if (dx >= dy) {
-				for (i = 0; i < dx; i++) {
-					x1 += addx;
-					count += dy;
-					if (count >= dx) {
-						y1 += addy;
-						count -= dx;
+			if ((end.x>=80 && end.x<=273) && (end.y >=4 && end.y<=236))
+			{
+				if (dx >= dy) {
+					for (i = 0; i < dx; i++) {
+						x1 += addx;
+						count += dy;
+						if (count >= dx) {
+							y1 += addy;
+							count -= dx;
+						}
+						*(pfbdata + x1 + y1 * 320) = white;
 					}
-					*(pfbdata + x1 + y1 * 320) = white;
-				}
-			}//end of dx >= dy
-			else {	
-				for (i = 0; i < dy; i++) {
-					y1 += addy; count += dx;
-					if (count >= dy) {
-						x1 += addx; count -= dy;
+				}//end of dx >= dy
+				else {	
+					for (i = 0; i < dy; i++) {
+						y1 += addy; count += dx;
+						if (count >= dy) {
+							x1 += addx; count -= dy;
+						}
+						*(pfbdata + x1 + y1 * 320) = white;
 					}
-					*(pfbdata + x1 + y1 * 320) = white;
-				}
-			}//end of else
+				}//end of else 
+			}
 			if (ie.code == 0) { get.x = ie.value; }
 			else if (ie.code == 1) { get.y = ie.value; }
 			else if (ie.code == 24) {
 				
 					end.x = a * get.x + b * get.y + c;
 					end.y = d * get.x + e * get.y + f;
+					if ((end.x>=80 && end.x<=273) && (end.y >=4 && end.y<=236)){
 					pressure = ie.value;
 					dx = end.x - start.x; dy = end.y - start.y;
 					x1 = start.x; y1 = start.y;
@@ -429,7 +433,7 @@ void Line(unsigned short CurrentColor) {
 							}
 						}//end of else
 						break;
-					}
+					} }
 				}
 			
 		}//end of ie. event handler
@@ -526,6 +530,7 @@ void Rectangle(unsigned short CurrentColor){ //This function based on Line func.
 		x1 = start.x; y1 = start.y;
 		
 		if (ie.type == 3) {
+			if ((end.x>=80 && end.x<=273) && (end.y >=4 && end.y<=236)){
 			for(i = 0 ; i < dx ; i++){
 				x1 += addx;
 				*(pfbdata + x1 + start.y * 320) = white;
@@ -535,13 +540,15 @@ void Rectangle(unsigned short CurrentColor){ //This function based on Line func.
 				y1 += addy;
 				*(pfbdata + start.x + y1 * 320) = white;
 				*(pfbdata + end.x + y1 * 320) = white;
-			}
+			}}
 			if (ie.code == 0) { get.x = ie.value; }
 			else if (ie.code == 1) { get.y = ie.value; }
 			else if (ie.code == 24) {
 				
 					end.x = a * get.x + b * get.y + c;
 					end.y = d * get.x + e * get.y + f;
+					if ((end.x>=80 && end.x<=273) && (end.y >=4 && end.y<=236)){
+
 					pressure = ie.value;
 					dx = end.x - start.x; dy = end.y - start.y;
 					x1 = start.x; y1 = start.y;
@@ -574,7 +581,7 @@ void Rectangle(unsigned short CurrentColor){ //This function based on Line func.
 							*(pfbdata + end.x + y1 * 320) = CurrentColor;
 						}
 						break;
-					}
+					} }
 				}
 			
 		}//end of ie. event handler
