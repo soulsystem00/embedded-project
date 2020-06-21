@@ -236,13 +236,13 @@ int setMod(Point touch)
 	Point DrawStart;
 	Point DrawEnd;
 
-	if((touch.x>=4 && touch.x<=75) && (touch.y>=34 && touch.y<=55))        {printf("sets mod Line\n");	 ShapeMod = 0; }
-	else if((touch.x>=4 && touch.x<=75) && (touch.y>=58 && touch.y<=79))   {printf("sets mod Rectangle\n");  ShapeMod = 1; }
-	else if((touch.x>=4 && touch.x<=75) && (touch.y>=82 && touch.y<=103))  {printf("sets mod Oval\n");	 ShapeMod = 2; }
-	else if((touch.x>=4 && touch.x<=75) && (touch.y>=106 && touch.y<=127)) {printf("sets mod FreeDraw\n");   ShapeMod = 3; }
-	else if((touch.x>=4 && touch.x<=75) && (touch.y>=130 && touch.y<=151)) {printf("sets mod Selete\n");	 ShapeMod = 4; }
-	else if((touch.x>=4 && touch.x<=75) && (touch.y>=154 && touch.y<=175)) {printf("sets mod Erase\n");	 ShapeMod = 5; }
-	else if((touch.x>=4 && touch.x<=75) && (touch.y>=178 && touch.y<=199)) {printf("sets mod Clear\n");	 ShapeMod = 6; }
+	if((touch.x>=4 && touch.x<=75) && (touch.y>=34 && touch.y<=55))        {printf("sets mod Line\n");	 ShapeMod = 0; DrawMod = 0;}
+	else if((touch.x>=4 && touch.x<=75) && (touch.y>=58 && touch.y<=79))   {printf("sets mod Rectangle\n");  ShapeMod = 1; DrawMod = 0;}
+	else if((touch.x>=4 && touch.x<=75) && (touch.y>=82 && touch.y<=103))  {printf("sets mod Oval\n");	 ShapeMod = 2; DrawMod = 0;}
+	else if((touch.x>=4 && touch.x<=75) && (touch.y>=106 && touch.y<=127)) {printf("sets mod FreeDraw\n");   ShapeMod = 3; DrawMod = 0;}
+	else if((touch.x>=4 && touch.x<=75) && (touch.y>=130 && touch.y<=151)) {printf("sets mod Selete\n");	 ShapeMod = 4; DrawMod = 0;}
+	else if((touch.x>=4 && touch.x<=75) && (touch.y>=154 && touch.y<=175)) {printf("sets mod Erase\n");	 ShapeMod = 5; DrawMod = 0;}
+	else if((touch.x>=4 && touch.x<=75) && (touch.y>=178 && touch.y<=199)) {printf("sets mod Clear\n");	 ShapeMod = 6; DrawMod = 0;}
 	
 	else if((touch.x>=277 && touch.x<=295) && (touch.y>=26 && touch.y<=44))  {printf("sets color white\n");   CurrentColor = white;}
 	else if((touch.x>=297 && touch.x<=315) && (touch.y>=26 && touch.y<=44))  {printf("sets color orange\n");  CurrentColor = orange;}
