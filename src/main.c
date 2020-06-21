@@ -91,7 +91,7 @@ int main(void) {
 				//TODO("implement Rectangle Function")
 			
 				Rectangle(CurrentColor);
-				//goto start;
+				goto start;
 			}
 			else if(ShapeMod == 2)
 			{
