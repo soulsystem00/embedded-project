@@ -76,54 +76,62 @@ int main(void) {
 	printf("start draw\n");
 	while(1)
 	{
-		if(ShapeMod == 0)
+		if(DrawMod == 0)
 		{
-			printf("start Line\n");
-			//TODO("implement Line Function")
+			if(ShapeMod == 0)
+			{
+				printf("start Line\n");
+				//TODO("implement Line Function")
 
-			Line(CurrentColor);
-		}
-		else if(ShapeMod == 1)
-		{
-			printf("start Rectangle\n");
-			//TODO("implement Rectangle Function")
+				Line(CurrentColor);
+			}
+			else if(ShapeMod == 1)
+			{
+				printf("start Rectangle\n");
+				//TODO("implement Rectangle Function")
 			
-			Rectangle(CurrentColor);
-			//goto start;
-		}
-		else if(ShapeMod == 2)
-		{
-			printf("start Oval\n");
-			//TODO("implement Oval Function")
+				Rectangle(CurrentColor);
+				//goto start;
+			}
+			else if(ShapeMod == 2)
+			{
+				printf("start Oval\n");
+				//TODO("implement Oval Function")
 
-			//Oval(CurrentColor);
-			goto start;
-		}
-		else if(ShapeMod == 3)
-		{
-			printf("start FreeDraw\n");
-			FreeDraw(CurrentColor);
-		}
-		else if(ShapeMod == 4)
-		{
-			printf("start Select\n");
-			//TODO("implement Select Function")
+				//Oval(CurrentColor);
+				goto start;
+			}
+			else if(ShapeMod == 3)
+			{
+				printf("start FreeDraw\n");
+				FreeDraw(CurrentColor);
+			}
+			else if(ShapeMod == 4)
+			{
+				printf("start Select\n");
+				//TODO("implement Select Function")
 
-			//Selete();
-			goto start;
-		}	
-		else if(ShapeMod == 5)
-		{
-			printf("start Erase\n");
-			//TODO("implement Erase Function")
+				//Selete();
+				goto start;
+			}	
+			else if(ShapeMod == 5)
+			{
+				printf("start Erase\n");
+				//TODO("implement Erase Function")
 
-			Erase();
+				Erase();
+			}
+			else if(ShapeMod == 6)
+			{
+				printf("start Clear\n");
+				clearDraw();
+				goto start;	
+			}
 		}
-		else if(ShapeMod == 6)
+		else if(DrawMod == 1)
 		{
-			printf("start Clear\n");
-			clearDraw();
-			goto start;	
+			printf("start Fill\n");
+			Fill(CurrentColor);
 		}
 		if(!(start.x>=79 && start.x<=272) && (start.y>=3 && start.y<=235))
 		{ 

@@ -62,3 +62,6 @@ void Rectangle(unsigned short CurrentColor);
 void Oval(unsigned short CurrentColor);
 void Selete();
 void Erase();
+
+void Fill(unsigned short CurrentColor);
+void FillFunction(int x, int y,unsigned short CurrentColor);

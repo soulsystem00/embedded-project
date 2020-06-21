@@ -256,7 +256,7 @@ int setMod(Point touch)
 	else if((touch.x>=280 && touch.x<=314) && (touch.y>=154 && touch.y<=175)) {printf("sets draw mod PEN\n"); DrawMod = 0; }
 	else if((touch.x>=280 && touch.x<=314) && (touch.y>=178 && touch.y<=199)) {printf("sets draw mod Fill\n"); DrawMod = 1; }
 
-	else if((touch.x>=80 && touch.x<=273) && (touch.y>=4 && touch.y<=236)) {printf("selected Draw Area"); makeLineBox2(79,3,274,237,red); return 1;}
+	else if((touch.x>=80 && touch.x<=273) && (touch.y>=4 && touch.y<=236)) {printf("selected Draw Area\n"); makeLineBox2(79,3,274,237,red); return 1;}
 
 	if( ShapeMod == 0 )
 		{ShapeStart.x = 4; ShapeStart.y = 34; ShapeEnd.x = 75; ShapeEnd.y = 55;}
@@ -336,15 +336,17 @@ void Line(unsigned short CurrentColor) {
 			if (ie.code == 0) { get.x = ie.value; }
 			else if (ie.code == 1) { get.y = ie.value; }
 			else if (ie.code == 24) {
+				pressure = ie.value;
 				start.x = a * get.x + b * get.y + c;
 				start.y = d * get.x + e * get.y + f;
 				if((start.x>=80 && start.x<=273) && (start.y >=4 && start.y<=236)){
 				chk = 1; 
 				}
+				else return;
 			}
 		}
 	}
-	while(chk != 0){
+	while(pressure != 0){
 		read(fd, &ie, sizeof(struct input_event));
 		x1 = start.x; y1 = start.y;
 		
@@ -590,4 +592,51 @@ read(fd, &ie, sizeof(struct input_event));
 			}
 		}
 	}
+}
+
+void Fill(unsigned short CurrentColor)
+{
+	printf("start Fill\n");
+	read(fd, &ie, sizeof(struct input_event));
+	
+	if(ie.type == 3)
+	{
+		if(ie.code == 0) get.x = ie.value;
+		if(ie.code == 1) get.y = ie.value;
+		if(ie.code == 24)
+		{
+			pressure = ie.value;
+			if( (pressure == 0) )
+			{
+				start.x = a*get.x+b*get.y+c;
+				start.y = d*get.x+e*get.y+f;
+				printf("%d %d\n",start.x,start.y);
+				if((start.x>=80 && start.x<=273) && (start.y >=4 && start.y<=236))
+					{FillFunction(start.x,start.y,CurrentColor);}
+				else
+					{return;}
+			}
+			
+		}
+	}
+}
+
+void FillFunction(int x, int y,unsigned short CurrentColor)
+{
+	if((x>=80 && x<=273) && (y >=4 && y<=236))
+	{
+		offset = y *320 + x;
+		if(*(pfbdata + offset) != CurrentColor)
+			{
+				*(pfbdata + offset) = CurrentColor;
+				FillFunction(x,y+1,CurrentColor);
+				FillFunction(x,y-1,CurrentColor);
+				FillFunction(x+1,y,CurrentColor);
+				FillFunction(x-1,y,CurrentColor);
+			}
+		else return;
+	}
+	else return;
+
+	
 }
