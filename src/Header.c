@@ -499,64 +499,87 @@ void FillinitColor() {
 void Oval(unsigned short CurrentColor){/* implement the function on here */}
 void Selete(){/* implement the function on here */}
 
-void Rectangle(unsigned short CurrentColor)
-{
-	int sx,sy,ex,ey;
-	int ary[194][233];
-	int i,j;
-	for(i = 0;i<194;i++)
-	{
-		for(j = 0;j<233;j++)
-		{
-			ary[i][j] = 0;
-		}
-	}
-	read(fd, &ie, sizeof(struct input_event));
+void Rectangle(unsigned short CurrentColor){ //This function based on Line func.
+	int addx = 0;
+	int addy = 0;
+	int i, x1, y1;
+	int dx = 0; int dy =0;
+	int R_chk = 0;
+	end.x = 0; end.y = 0;
 	
-	printf("type = %d, code = %d, value = %d\n",ie.type,ie.code,ie.value);
-	if(ie.type == 3)
-	{
-		if(ie.code == 0) get.x = ie.value;
-		if(ie.code == 1) get.y = ie.value;
-		if(ie.code == 24)
-		{
-			pressure = ie.value;
-			
-			start.x = a*get.x+b*get.y+c;
-			start.y = d*get.x+e*get.y+f;
-			sx = start.x - 80;
-			sy = start.y - 4;
-			while(pressure != 0)
-			{
-				
-				read(fd, &ie, sizeof(struct input_event));
-				if(ie.type == 3)
-				{
-					if(ie.code == 0) get.x = ie.value;
-					if(ie.code == 1) get.y = ie.value;
-					if(ie.code == 24)
-					{
-						int pressure2 = ie.value;
-						if(pressure2 == 0) break;
-						end.x = a*get.x+b*get.y+c;
-						end.y = d*get.x+e*get.y+f;
-						ex = end.x - 80;
-						ey = end.y - 4;
-					
-					
-					}
-					printf("x = %d, y = %d\n",end.x,end.y);
-					if((end.x>=80 && end.x<=273) && (end.y>=4 && end.y<=236) && (start.x>=80 && start.x<=273) && (start.y>=4 && start.y<=236))
-						{makeLineBox3(sx,sy,ex,ey,ary);PrintAry(ary,CurrentColor);}
-						
+	while(R_chk==0){
+		read(fd, &ie, sizeof(struct input_event));
+		if (ie.type == 3) {
+			if (ie.code == 0) { get.x = ie.value; }
+			else if (ie.code == 1) { get.y = ie.value; }
+			else if (ie.code == 24) {
+				start.x = a * get.x + b * get.y + c;
+				start.y = d * get.x + e * get.y + f;
+				if((start.x>=80 && start.x<=273) && (start.y >=4 && start.y<=236)){
+				R_chk = 1; 
 				}
 			}
 		}
 	}
-	printf("x = %d, y = %d\n",start.x,start.y);
-/*if((end.x>=80 && end.x<=273) && (end.y>=4 && end.y<=236) && (start.x>=80 && start.x<=273) && (start.y>=4 && start.y<=236))
-						{makeLineBox(start,end,CurrentColor);}*/
-}
+	while(R_chk != 0){
+		read(fd, &ie, sizeof(struct input_event));
+		x1 = start.x; y1 = start.y;
+		
+		if (ie.type == 3) {
+			for(i = 0 ; i < dx ; i++){
+				x1 += addx;
+				*(pfbdata + x1 + start.y * 320) = white;
+				*(pfbdata + x1 + end.y * 320) = white;
+			}
+			for(i = 0 ; i < dy ; i++){
+				y1 += addy;
+				*(pfbdata + start.x + y1 * 320) = white;
+				*(pfbdata + end.x + y1 * 320) = white;
+			}
+			if (ie.code == 0) { get.x = ie.value; }
+			else if (ie.code == 1) { get.y = ie.value; }
+			else if (ie.code == 24) {
+				
+					end.x = a * get.x + b * get.y + c;
+					end.y = d * get.x + e * get.y + f;
+					pressure = ie.value;
+					dx = end.x - start.x; dy = end.y - start.y;
+					x1 = start.x; y1 = start.y;
+					if (dx < 0) { addx = -1; dx = -dx; } // if dx, dy are minus, addx, addy minus too. 
+					else { addx = 1; }
+					if (dy < 0) { addy = -1;  dy = -dy; }
+					else { addy = 1; }
+					
+					for(i = 0 ; i < dx ; i++){ //dx is x's increase
+						x1 += addx;
+						*(pfbdata + x1 + start.y * 320) = CurrentColor;
+						*(pfbdata + x1 + end.y * 320) = CurrentColor;
+					}
+					for(i = 0 ; i < dy ; i++){//dy is y's increase
+						y1 += addy;
+						*(pfbdata + start.x + y1 * 320) = CurrentColor;
+						*(pfbdata + end.x + y1 * 320) = CurrentColor;
+					}
+					
+					if (pressure == 0) {
+						x1 = start.x; y1 = start.y;
+						for(i = 0 ; i < dx ; i++){
+							x1 += addx;
+							*(pfbdata + x1 + start.y * 320) = CurrentColor;
+							*(pfbdata + x1 + end.y * 320) = CurrentColor;
+						}
+						for(i = 0 ; i < dy ; i++){
+							y1 += addy;
+							*(pfbdata + start.x + y1 * 320) = CurrentColor;
+							*(pfbdata + end.x + y1 * 320) = CurrentColor;
+						}
+						break;
+					}
+				}
+			
+		}//end of ie. event handler
+	}// end of while
+}//end of fun Rec
 
 void Erase(){
 read(fd, &ie, sizeof(struct input_event));
