@@ -223,7 +223,7 @@ void PrintAry(unsigned short Screen[194][233])
 		for(j=0;j<194;j++)
 		{
 			offset = (i+4) * 320 + (j+80);
-			if(Screen[j][i] != white)
+			if(Screen[j][i] != NULLcolor)
 				*(pfbdata + offset) = Screen[j][i];
 		}
 	} // Draw tmp pixel
@@ -237,7 +237,7 @@ void SaveAry(unsigned short Screen[194][233])
 	{
 		for(j = 0;j<194;j++)
 		{
-			if(DrawArea[j][i] != Screen[j][i] && Screen[j][i] != white)
+			if(DrawArea[j][i] != Screen[j][i] && Screen[j][i] != NULLcolor)
 				DrawArea[j][i] = Screen[j][i];
 			/*else if(DrawArea[j][i] != Screen[j][i] && Screen[j][i] == NULL)
 				DrawArea[j][i] = Screen[j][i];*/
@@ -398,7 +398,7 @@ void Line(unsigned short CurrentColor) {
 		{
 			for(j=0;j<194;j++)
 			{
-				tmp[j][i] = white;
+				tmp[j][i] = NULLcolor;
 			}
 		} // clear draw area
 		if (ie.type == 3) {
@@ -413,7 +413,7 @@ void Line(unsigned short CurrentColor) {
 							count -= dx;
 						}
 						//*(pfbdata + x1 + y1 * 320) = white;
-						tmp[x1 - 80][y1 - 4] = white;
+						tmp[x1 - 80][y1 - 4] = NULLcolor;
 						
 					}
 				}//end of dx >= dy
@@ -424,7 +424,7 @@ void Line(unsigned short CurrentColor) {
 							x1 += addx; count -= dy;
 						}
 						//*(pfbdata + x1 + y1 * 320) = white;
-						tmp[x1-80][y1-4] = white;
+						tmp[x1-80][y1-4] = NULLcolor;
 					}
 				}//end of else 
 			}
@@ -577,7 +577,7 @@ void Rectangle(unsigned short CurrentColor){ //This function based on Line func.
 	int dx = 0; int dy =0;
 	int R_chk = 0;
 	end.x = 0; end.y = 0;
-	
+	unsigned short tmp[194][233];
 	while(R_chk==0){
 		read(fd, &ie, sizeof(struct input_event));
 		if (ie.type == 3) {
@@ -593,6 +593,14 @@ void Rectangle(unsigned short CurrentColor){ //This function based on Line func.
 		}
 	}
 	while(R_chk != 0){
+		for(i = 0;i<233;i++)
+		{
+			for(j=0;j<194;j++)
+			{
+				tmp[j][i] = NULLcolor;
+			}
+		} // clear draw area
+
 		read(fd, &ie, sizeof(struct input_event));
 		x1 = start.x; y1 = start.y;
 		
@@ -600,14 +608,19 @@ void Rectangle(unsigned short CurrentColor){ //This function based on Line func.
 			if ((end.x>=80 && end.x<=273) && (end.y >=4 && end.y<=236)){
 			for(i = 0 ; i < dx ; i++){
 				x1 += addx;
-				*(pfbdata + x1 + start.y * 320) = white;
-				*(pfbdata + x1 + end.y * 320) = white;
+				//*(pfbdata + x1 + start.y * 320) = white;
+				//*(pfbdata + x1 + end.y * 320) = white;
+				tmp[x1 - 80][start.y - 4] = NULLcolor;
+				tmp[x1 -80][end.y - 4] = NULLcolor;
 			}
 			for(i = 0 ; i < dy ; i++){
 				y1 += addy;
-				*(pfbdata + start.x + y1 * 320) = white;
-				*(pfbdata + end.x + y1 * 320) = white;
-			}}
+				/**(pfbdata + start.x + y1 * 320) = white;
+				*(pfbdata + end.x + y1 * 320) = white;*/
+				tmp[start.x - 80][y1 - 4] = NULLcolor;
+				tmp[end.x - 80][y1 - 4] = NULLcolor;
+			}
+		}
 			if (ie.code == 0) { get.x = ie.value; }
 			else if (ie.code == 1) { get.y = ie.value; }
 			else if (ie.code == 24) {
@@ -626,27 +639,37 @@ void Rectangle(unsigned short CurrentColor){ //This function based on Line func.
 					
 					for(i = 0 ; i < dx ; i++){ //dx is x's increase
 						x1 += addx;
-						*(pfbdata + x1 + start.y * 320) = CurrentColor;
-						*(pfbdata + x1 + end.y * 320) = CurrentColor;
+						/**(pfbdata + x1 + start.y * 320) = CurrentColor;
+						*(pfbdata + x1 + end.y * 320) = CurrentColor;*/
+						tmp[x1 - 80][start.y - 4] = CurrentColor;
+						tmp[x1 -80][end.y - 4] = CurrentColor;
 					}
 					for(i = 0 ; i < dy ; i++){//dy is y's increase
 						y1 += addy;
-						*(pfbdata + start.x + y1 * 320) = CurrentColor;
-						*(pfbdata + end.x + y1 * 320) = CurrentColor;
+						/**(pfbdata + start.x + y1 * 320) = CurrentColor;
+						*(pfbdata + end.x + y1 * 320) = CurrentColor;*/
+						tmp[start.x - 80][y1 - 4] = CurrentColor;
+						tmp[end.x - 80][y1 - 4] = CurrentColor;
 					}
-					
+					PrintAry(tmp);
 					if (pressure == 0) {
 						x1 = start.x; y1 = start.y;
 						for(i = 0 ; i < dx ; i++){
 							x1 += addx;
-							*(pfbdata + x1 + start.y * 320) = CurrentColor;
-							*(pfbdata + x1 + end.y * 320) = CurrentColor;
+							/**(pfbdata + x1 + start.y * 320) = CurrentColor;
+							*(pfbdata + x1 + end.y * 320) = CurrentColor;*/
+							tmp[x1 - 80][start.y - 4] = CurrentColor;
+							tmp[x1 -80][end.y - 4] = CurrentColor;
 						}
 						for(i = 0 ; i < dy ; i++){
 							y1 += addy;
-							*(pfbdata + start.x + y1 * 320) = CurrentColor;
-							*(pfbdata + end.x + y1 * 320) = CurrentColor;
+							/**(pfbdata + start.x + y1 * 320) = CurrentColor;
+							*(pfbdata + end.x + y1 * 320) = CurrentColor;*/
+							tmp[start.x - 80][y1 - 4] = CurrentColor;
+							tmp[end.x - 80][y1 - 4] = CurrentColor;
 						}
+						SaveAry(tmp);
+						PrintDrawArea();
 						break;
 					} }
 				}
@@ -714,9 +737,9 @@ void Fill(unsigned short CurrentColor)
 						tmpColor = *(pfbdata + offset);
 						printf("%u\n", tmpColor);
 						printf("Fill Function start\n");
-						
 						FillFunction(start.x,start.y,CurrentColor);
 						printf("Fill Function inininin\n");
+						PrintDrawArea();
 					}
 				else
 					{return;}
@@ -731,11 +754,10 @@ void FillFunction(int x, int y,unsigned short CurrentColor)
 	
 	if(((x>=80 && x<=273) && (y >=4 && y<=236)) && (tmpColor != CurrentColor))
 	{
-		
-		offset = y * 320 + x;
-		if(*(pfbdata + offset) == tmpColor)
+		if(DrawArea[x - 80][y - 4] == tmpColor)
 		{
-			*(pfbdata + offset) = CurrentColor;
+			
+			DrawArea[x - 80][y - 4] = CurrentColor;
 			FillFunction(x,y+1,CurrentColor);
 			FillFunction(x,y-1,CurrentColor);
 			FillFunction(x+1,y,CurrentColor);

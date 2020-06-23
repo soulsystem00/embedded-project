@@ -11,6 +11,9 @@ int main(void) {
 	darkblue = makepixel(0,0,128);
 	blue = makepixel(0,0,255);
 	black = makepixel(0,0,0);
+
+	NULLcolor = makepixel(128,128,128);
+
 	Point touch;
 
         pressure = -1;

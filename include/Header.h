@@ -31,6 +31,8 @@ unsigned short blue;
 unsigned short black;
 unsigned short CurrentColor;
 unsigned short tmpColor;
+unsigned short NULLcolor;
+
 int ShapeMod;
 int ColorMod;
 int DrawMod;
@@ -67,3 +69,4 @@ void Erase();
 void Fill(unsigned short CurrentColor);
 void FillFunction(int x, int y,unsigned short CurrentColor);
 void PrintAry(unsigned short Screen[194][233]);
+void PrintDrawArea();
