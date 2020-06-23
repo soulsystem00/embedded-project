@@ -20,6 +20,13 @@ int main(void) {
         int x1, x2, y1, y2;
         fbfd = open(FBDEVFILE, O_RDWR);
 
+	for(i = 0;i<233;i++)
+	{
+		for(j=0;j<194;j++)
+		{
+			DrawArea[j][i] = white;
+		}
+	} // clear draw area
         if (fbfd < 0) {
                 perror("fbdev open");
                 exit(1);
@@ -49,6 +56,7 @@ int main(void) {
         clearLcd();
 	PrintScreen(Screen,sizeof(Screen)/sizeof(int));
 	FillinitColor();
+	PrintDrawArea();
 	start:
 	printf("start touch\n");
  	while(1)

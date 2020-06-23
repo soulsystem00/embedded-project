@@ -34,7 +34,7 @@ unsigned short tmpColor;
 int ShapeMod;
 int ColorMod;
 int DrawMod;
-
+unsigned short DrawArea[194][233];
 //int _Line[1584];
 //int _Rectangle[1584];
 typedef struct _Point {
@@ -66,3 +66,4 @@ void Erase();
 
 void Fill(unsigned short CurrentColor);
 void FillFunction(int x, int y,unsigned short CurrentColor);
+void PrintAry(unsigned short Screen[194][233]);

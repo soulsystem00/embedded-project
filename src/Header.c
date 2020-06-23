@@ -141,7 +141,7 @@ void makeLineBox3(int sx,int sy, int ex,int ey, int ary[194][233]){
 void FreeDraw(unsigned short color)
 {
 	read(fd, &ie, sizeof(struct input_event));
-	
+	unsigned short tmp[194][233];
 	if(ie.type == 3)
 	{
 		if(ie.code == 0) get.x = ie.value;
@@ -195,7 +195,7 @@ void PrintScreen(int Screen[], int size)
 	}
 }
 
-void PrintAry(int Screen[194][233], unsigned short color)
+void PrintAry(unsigned short Screen[194][233])
 {
 	int i,j;
 	int count = 0;
@@ -205,16 +205,59 @@ void PrintAry(int Screen[194][233], unsigned short color)
 		for(j=0;j<194;j++)
 		{
 			offset = (i+4) * 320 + (j+80);
-			if(Screen[j][i] == 1)
-			{
-				*(pfbdata + offset) = color;
-			}
-			else
-				*(pfbdata + offset) = white;
+			*(pfbdata + offset) = white;
 		}
+	} // clear draw area
+
+	for(i = 0;i<233;i++)
+	{
+		for(j=0;j<194;j++)
+		{
+			offset = (i+4) * 320 + (j+80);
+			*(pfbdata + offset) = DrawArea[j][i];
+		}
+	} // Draw Saved Pixel
+
+	for(i = 0;i<233;i++)
+	{
+		for(j=0;j<194;j++)
+		{
+			offset = (i+4) * 320 + (j+80);
+			if(Screen[j][i] != white)
+				*(pfbdata + offset) = Screen[j][i];
+		}
+	} // Draw tmp pixel
+}
+
+void SaveAry(unsigned short Screen[194][233])
+{
+	int i,j;
+
+	for(i = 0;i<233;i++)
+	{
+		for(j = 0;j<194;j++)
+		{
+			if(DrawArea[j][i] != Screen[j][i] && Screen[j][i] != white)
+				DrawArea[j][i] = Screen[j][i];
+			/*else if(DrawArea[j][i] != Screen[j][i] && Screen[j][i] == NULL)
+				DrawArea[j][i] = Screen[j][i];*/
+			
+		}		
 	}
 }
 
+void PrintDrawArea()
+{
+	int i,j;
+	for(i = 0;i<233;i++)
+	{
+		for(j=0;j<194;j++)
+		{
+			offset = (i+4) * 320 + (j+80);
+			*(pfbdata + offset) = DrawArea[j][i];
+		}
+	} // Draw Saved Pixel
+}
 void clearDraw() {
         int i, j;
         for (i = 4; i <= 236; i++) {
@@ -330,6 +373,8 @@ void Line(unsigned short CurrentColor) {
 	int chk = 0;
 	int dx = 0; int dy =0;
 	
+	unsigned short tmp[194][233];
+	
 	while(chk==0){
 		read(fd, &ie, sizeof(struct input_event));
 		if (ie.type == 3) {
@@ -349,7 +394,13 @@ void Line(unsigned short CurrentColor) {
 	while(pressure != 0){
 		read(fd, &ie, sizeof(struct input_event));
 		x1 = start.x; y1 = start.y;
-		
+		for(i = 0;i<233;i++)
+		{
+			for(j=0;j<194;j++)
+			{
+				tmp[j][i] = white;
+			}
+		} // clear draw area
 		if (ie.type == 3) {
 			if ((end.x>=80 && end.x<=273) && (end.y >=4 && end.y<=236))
 			{
@@ -361,7 +412,9 @@ void Line(unsigned short CurrentColor) {
 							y1 += addy;
 							count -= dx;
 						}
-						*(pfbdata + x1 + y1 * 320) = white;
+						//*(pfbdata + x1 + y1 * 320) = white;
+						tmp[x1 - 80][y1 - 4] = white;
+						
 					}
 				}//end of dx >= dy
 				else {	
@@ -370,48 +423,28 @@ void Line(unsigned short CurrentColor) {
 						if (count >= dy) {
 							x1 += addx; count -= dy;
 						}
-						*(pfbdata + x1 + y1 * 320) = white;
+						//*(pfbdata + x1 + y1 * 320) = white;
+						tmp[x1-80][y1-4] = white;
 					}
 				}//end of else 
 			}
+
 			if (ie.code == 0) { get.x = ie.value; }
 			else if (ie.code == 1) { get.y = ie.value; }
-			else if (ie.code == 24) {
+			else if (ie.code == 24) 
+			{
 				
 					end.x = a * get.x + b * get.y + c;
 					end.y = d * get.x + e * get.y + f;
 					if ((end.x>=80 && end.x<=273) && (end.y >=4 && end.y<=236)){
-					pressure = ie.value;
-					dx = end.x - start.x; dy = end.y - start.y;
-					x1 = start.x; y1 = start.y;
-					if (dx < 0) { addx = -1; dx = -dx; }
-					else { addx = 1; }
-					if (dy < 0) { addy = -1;  dy = -dy; }
-					else { addy = 1; }
-					
-					if (dx >= dy) {
-						for (i = 0; i < dx; i++) {
-							x1 += addx;
-							count += dy;
-							if (count >= dx) {
-								y1 += addy;
-								count -= dx;
-							}
-							*(pfbdata + x1 + y1 * 320) = CurrentColor;
-						}
-					}//end of dx >= dy
-					else {
-						for (i = 0; i < dy; i++) {
-							y1 += addy; count += dx;
-							if (count >= dy) {
-								x1 += addx; count -= dy;
-							}
-							*(pfbdata + x1 + y1 * 320) = CurrentColor;
-						}
-					}//end of else
-
-					if (pressure == 0) {
+						pressure = ie.value;
+						dx = end.x - start.x; dy = end.y - start.y;
 						x1 = start.x; y1 = start.y;
+						if (dx < 0) { addx = -1; dx = -dx; }
+						else { addx = 1; }
+						if (dy < 0) { addy = -1;  dy = -dy; }
+						else { addy = 1; }
+					
 						if (dx >= dy) {
 							for (i = 0; i < dx; i++) {
 								x1 += addx;
@@ -420,7 +453,8 @@ void Line(unsigned short CurrentColor) {
 									y1 += addy;
 									count -= dx;
 								}
-								*(pfbdata + x1 + y1 * 320) = CurrentColor;
+								//*(pfbdata + x1 + y1 * 320) = CurrentColor;
+								tmp[x1-80][y1-4] = CurrentColor;
 							}
 						}//end of dx >= dy
 						else {
@@ -429,16 +463,49 @@ void Line(unsigned short CurrentColor) {
 								if (count >= dy) {
 									x1 += addx; count -= dy;
 								}
-								*(pfbdata + x1 + y1 * 320) = CurrentColor;
+								//*(pfbdata + x1 + y1 * 320) = CurrentColor;
+								tmp[x1-80][y1-4] = CurrentColor;
+							
 							}
 						}//end of else
-						break;
-					} }
+						PrintAry(tmp);
+						if (pressure == 0) 
+						{
+							x1 = start.x; y1 = start.y;
+							if (dx >= dy) {
+								for (i = 0; i < dx; i++) {
+									x1 += addx;
+									count += dy;
+									if (count >= dx) {
+										y1 += addy;
+										count -= dx;
+									}
+									//*(pfbdata + x1 + y1 * 320) = CurrentColor;
+									tmp[x1-80][y1-4] = CurrentColor;
+								}
+							}//end of dx >= dy
+							else {
+								for (i = 0; i < dy; i++) {
+									y1 += addy; count += dx;
+									if (count >= dy) {
+										x1 += addx; count -= dy;
+									}
+									//*(pfbdata + x1 + y1 * 320) = CurrentColor;
+									tmp[x1-80][y1-4] = CurrentColor;
+								}
+							}//end of else
+							SaveAry(tmp);
+							PrintDrawArea();
+							break;
+						} 
+						
+					}
 				}
 			
 		}//end of ie. event handler
 	}// end of while
 }//end of fun Line
+
 void FillinitColor() {
         int i, j;
 	int x = 278;
