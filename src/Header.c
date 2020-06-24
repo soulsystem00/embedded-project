@@ -61,21 +61,21 @@ void makeLineBox(Point start, Point end, unsigned short color){
                 end.y = tmp;
         }
         for (j = start.x; j <= end.x; j++) {
-			if (R_DrawArea[j][start.y] == white) {
+			if (R_DrawArea[j][start.y] != color) {
 				offset = start.y * 320 + j;
 				*(pfbdata + offset) = color;
 			}
-			if (R_DrawArea[j][end.y] == white) {
+			if (R_DrawArea[j][end.y] != color) {
 				offset = end.y * 320 + j;
 				*(pfbdata + offset) = color;
 			}
         }
 		for (i = start.y; i <= end.y; i++) {
-			if (R_DrawArea[start.x][i] == white) {
+			if (R_DrawArea[start.x][i] != color) {
 				offset = i * 320 + start.x;
 				*(pfbdata + offset) = color;
 			}
-			if (R_DrawArea[end.x][i] == white) {
+			if (R_DrawArea[end.x][i] != color) {
 				offset = i * 320 + end.x;
 				*(pfbdata + offset) = color;
 			}
@@ -176,6 +176,41 @@ void makeLineBox4(Point start, Point end, unsigned short color) {
 	}
 }
 
+void makeLineBox5(Point start, Point end, unsigned short CurrentColor) {
+	int i, j, tmp;
+	if (start.x > end.x) {
+		tmp = start.x;
+		start.x = end.x;
+		end.x = tmp;
+	}
+	if (start.y > end.y) {
+		tmp = start.y;
+		start.y = end.y;
+		end.y = tmp;
+	}
+	for (j = start.x; j <= end.x; j++) {
+		if (R_DrawArea[j][start.y] != CurrentColor) {
+			offset = start.y * 320 + j;
+			*(pfbdata + offset) = R_DrawArea[j][start.y];
+		}
+		if (R_DrawArea[j][end.y] != CurrentColor) {
+			offset = end.y * 320 + j;
+			*(pfbdata + offset) = R_DrawArea[j][start.y];
+		}
+	}
+	for (i = start.y; i <= end.y; i++) {
+		if (R_DrawArea[start.x][i] != CurrentColor) {
+			offset = i * 320 + start.x;
+			*(pfbdata + offset) = R_DrawArea[j][start.y];
+		}
+		if (R_DrawArea[end.x][i] != CurrentColor) {
+			offset = i * 320 + end.x;
+			*(pfbdata + offset) = R_DrawArea[j][start.y];
+		}
+	}
+}
+
+
 void FreeDraw(unsigned short color)
 {
 	int count = 0;
@@ -220,9 +255,8 @@ void FreeDraw(unsigned short color)
 								y1 += addy;
 								count -= dx;
 							}
-							if (R_DrawArea[x1][y1] == white) {
-								*(pfbdata + x1 + y1 * 320) = CurrentColor;
-							}
+								*(pfbdata + x1 + y1 * 320) = color;
+								R_DrawArea[x1][y1] = color;
 						}
 						chk = 1;
 					}//end of dx >= dy
@@ -232,9 +266,8 @@ void FreeDraw(unsigned short color)
 							if (count >= dy) {
 								x1 += addx; count -= dy;
 							}
-							if (R_DrawArea[x1][y1] == white) {
-								*(pfbdata + x1 + y1 * 320) = CurrentColor;
-							}
+								*(pfbdata + x1 + y1 * 320) = color;
+								R_DrawArea[x1][y1] = color;
 						}
 						chk = 1;
 					}
@@ -485,8 +518,8 @@ void Line(unsigned short CurrentColor) {
 							y1 += addy;
 							count -= dx;
 						}
-						if (R_DrawArea[x1][y1] == white) {
-							*(pfbdata + x1 + y1 * 320) = white;
+						if (R_DrawArea[x1][y1] != CurrentColor) {
+							*(pfbdata + x1 + y1 * 320) = R_DrawArea[x1][y1];
 						}
 					}
 				}//end of dx >= dy
@@ -496,8 +529,8 @@ void Line(unsigned short CurrentColor) {
 						if (count >= dy) {
 							x1 += addx; count -= dy;
 						}
-						if (R_DrawArea[x1][y1] == white) {
-							*(pfbdata + x1 + y1 * 320) = white;
+						if (R_DrawArea[x1][y1] != CurrentColor) {
+							*(pfbdata + x1 + y1 * 320) = R_DrawArea[x1][y1];
 						}
 					}
 				}//end of else 
@@ -525,7 +558,7 @@ void Line(unsigned short CurrentColor) {
 								y1 += addy;
 								count -= dx;
 							}
-							if (R_DrawArea[x1][y1] == white) {
+							if (R_DrawArea[x1][y1] != CurrentColor) {
 								*(pfbdata + x1 + y1 * 320) = CurrentColor;
 							}
 						}
@@ -536,7 +569,7 @@ void Line(unsigned short CurrentColor) {
 							if (count >= dy) {
 								x1 += addx; count -= dy;
 							}
-							if (R_DrawArea[x1][y1] == white) {
+							if (R_DrawArea[x1][y1] != CurrentColor) {
 								*(pfbdata + x1 + y1 * 320) = CurrentColor;
 							}
 						}
@@ -1017,7 +1050,7 @@ void Rectangle(unsigned short CurrentColor){ //This function based on Line func.
 		
 		if (ie.type == 3) {
 			if ((end.x>=80 && end.x<=273) && (end.y >=4 && end.y<=236)){
-				makeLineBox(start, end, white);//Àü²¨ Áö¿ì±â
+				makeLineBox5(start, end, CurrentColor);//Àü²¨ Áö¿ì±â
 			}
 			if (ie.code == 0) { get.x = ie.value; }
 			else if (ie.code == 1) { get.y = ie.value; }
@@ -1112,6 +1145,7 @@ void Fill(unsigned short CurrentColor)
 				if((start.x>=80 && start.x<=273) && (start.y >=4 && start.y<=236))
 					{	
 						offset = start.y *320 + start.x;
+						R_DrawArea[start.x][start.y] = CurrentColor;
 						tmpColor = *(pfbdata + offset);
 						printf("%u\n", tmpColor);
 						printf("Fill Function start\n");
@@ -1134,6 +1168,7 @@ void FillFunction(int x, int y,unsigned short CurrentColor)
 	{
 		
 		offset = y * 320 + x;
+		R_DrawArea[x][y] = CurrentColor;
 		if(*(pfbdata + offset) == tmpColor)
 		{
 			*(pfbdata + offset) = CurrentColor;
