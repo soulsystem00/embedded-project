@@ -683,15 +683,15 @@ void Selete()
 					if (pressure == 0)
 					{
 						//x1 = start.x; y1 = start.y;
-						for (i = 0; i < dx; i++) {
-							//x1 += addx;
-							for (j = start.y; j < end.y; j++)
+						if(start.x > end.x)
+						{int tmp = end.x; end.x = start.x; start.x = tmp;}
+						if(start.y > end.y)
+						{int tmp = end.y; end.y = start.y; start.y = tmp;}
+						for(i = start.x;i<end.x;i++)
+						{
+							for(j = start.y;j<end.y;j++)
 							{
-
-								/**(pfbdata + x1 + start.y * 320) = CurrentColor;
-								*(pfbdata + x1 + end.y * 320) = CurrentColor;*/
-								if ((start.x + i) - 80 < 194 && j < 233)
-									{selected[(start.x + i) - 80][j - 4] = 1;}
+								selected[i - 80][j - 4] = 1;
 							}
 						}
 						break;
@@ -708,7 +708,7 @@ void Selete()
 			tmp2[j][i] = NULLcolor;
 		}
 	} // clear draw area
-
+	R_chk = 0;
 	while (R_chk == 0)
 	{
 		read(fd, &ie, sizeof(struct input_event));
@@ -718,6 +718,7 @@ void Selete()
 			else if (ie.code == 24) {
 				start.x = a * get.x + b * get.y + c;
 				start.y = d * get.x + e * get.y + f;
+				printf("%d %d\n",start.x,start.y);
 				if ((start.x >= 80 && start.x <= 273) && (start.y >= 4 && start.y <= 236)) {
 					R_chk = 1;
 				}
@@ -737,50 +738,57 @@ void Selete()
 			else if (ie.code == 1) { get.y = ie.value; }
 			else if (ie.code == 24)
 			{
-
-				end.x = a * get.x + b * get.y + c;
-				end.y = d * get.x + e * get.y + f;
-				if ((end.x >= 80 && end.x <= 273) && (end.y >= 4 && end.y <= 236))
+				pressure = ie.value;
+				if(pressure == 0)
 				{
-					pressure = ie.value;
+					end.x = a * get.x + b * get.y + c;
+					end.y = d * get.x + e * get.y + f;
 					dx = end.x - start.x; dy = end.y - start.y;
-					if (pressure == 0)
+					if ((end.x >= 80 && end.x <= 273) && (end.y >= 4 && end.y <= 236))
 					{
-						for (i = 0; i < 233; i++)
+						pressure = ie.value;
+						dx = end.x - start.x; 
+						dy = end.y - start.y;
+						printf("%d %d\n",end.x,end.y);
+						if (pressure == 0)
 						{
-							for (j = 0; j < 194; j++)
+							printf("%d %d\n",dx,dy);
+							for (i = 0; i < 233; i++)
 							{
-								if (selected[j][i] == 1)
+								for (j = 0; j < 194; j++)
 								{
-									if (j + dx < 233 && i + dy < 194)
+									if (selected[j][i] == 1)
 									{
-										tmp2[j + dx][i + dy] = DrawArea[j][i];
+										if (j + dx < 233 && i + dy < 194)
+										{
+											tmp2[j + dx][i + dy] = DrawArea[j][i];
+										}
 									}
 								}
-							}
-						} // clear draw area
-						for (i = 0; i < 233; i++)
-						{
-							for (j = 0; j < 194; j++)
+							} // clear draw area
+							for (i = 0; i < 233; i++)
 							{
-								if (selected[j][i] == 1)
+								for (j = 0; j < 194; j++)
 								{
-									DrawArea[j][i] = white;
+									if (selected[j][i] == 1)
+									{
+										DrawArea[j][i] = white;
+									}
 								}
-							}
-						} // clear draw area
-						for (i = 0; i < 233; i++)
-						{
-							for (j = 0; j < 194; j++)
+							} // clear draw area
+							for (i = 0; i < 233; i++)
 							{
-								if (tmp2[j][i] != NULLcolor)
+								for (j = 0; j < 194; j++)
 								{
-									DrawArea[j][i] = tmp2[j][i];
+									if (tmp2[j][i] != NULLcolor)
+									{
+										DrawArea[j][i] = tmp2[j][i];
+									}
 								}
-							}
-						} // clear draw area
-						PrintDrawArea();
-						break;
+							} // clear draw area
+							PrintDrawArea();
+							break;
+						}
 					}
 				}
 			}
