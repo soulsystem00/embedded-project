@@ -270,12 +270,12 @@ void PrintDrawArea()
 }
 void clearDraw() {
         int i, j;
-        for (i = 4; i <= 236; i++) {
-                for (j = 80; j <= 273; j++) {
-                        offset = i * 320 + j;
-                        *(pfbdata + offset) = white;
+        for (i = 0; i < 233; i++) {
+                for (j = 0; j < 194; j++) {
+                        DrawArea[j][i] = white;
                 }
         }
+	PrintDrawArea();
 }
 
 int setMod(Point touch)
@@ -578,8 +578,215 @@ void FillinitColor() {
         }
 }
 void Oval(unsigned short CurrentColor){/* implement the function on here */}
-void Selete(){/* implement the function on here */}
+void Selete()
+{
+	unsigned short tmp[194][233]; //selected area rectangle
+	unsigned short tmp2[194][233]; // all of selected area 
+	unsigned int selected[194][233]; //all of selected area flag
+	int addx = 0;
+	int addy = 0;
+	int i, x1, y1;
+	int dx = 0; int dy = 0;
+	int R_chk = 0;
+	end.x = 0; end.y = 0;
+	for (i = 0; i < 233; i++)
+	{
+		for (j = 0; j < 194; j++)
+		{
+			selected[j][i] = 0;
+		}
+	} // clear draw area
+	while (R_chk == 0)
+	{
+		read(fd, &ie, sizeof(struct input_event));
+		if (ie.type == 3) {
+			if (ie.code == 0) { get.x = ie.value; }
+			else if (ie.code == 1) { get.y = ie.value; }
+			else if (ie.code == 24) {
+				start.x = a * get.x + b * get.y + c;
+				start.y = d * get.x + e * get.y + f;
+				if ((start.x >= 80 && start.x <= 273) && (start.y >= 4 && start.y <= 236)) {
+					R_chk = 1;
+				}
+				else return;
+			}
+		}
+	}
+	while (R_chk != 0)
+	{
+		for (i = 0; i < 233; i++)
+		{
+			for (j = 0; j < 194; j++)
+			{
+				tmp[j][i] = NULLcolor;
+			}
+		} // clear draw area
 
+		read(fd, &ie, sizeof(struct input_event));
+		x1 = start.x; y1 = start.y;
+
+		if (ie.type == 3)
+		{
+			if ((end.x >= 80 && end.x <= 273) && (end.y >= 4 && end.y <= 236)) {
+				for (i = 0; i < dx; i++)
+				{
+					x1 += addx;
+					//*(pfbdata + x1 + start.y * 320) = white;
+					//*(pfbdata + x1 + end.y * 320) = white;
+					tmp[x1 - 80][start.y - 4] = NULLcolor;
+					tmp[x1 - 80][end.y - 4] = NULLcolor;
+				}
+				for (i = 0; i < dy; i++)
+				{
+					y1 += addy;
+					/**(pfbdata + start.x + y1 * 320) = white;
+					*(pfbdata + end.x + y1 * 320) = white;*/
+					tmp[start.x - 80][y1 - 4] = NULLcolor;
+					tmp[end.x - 80][y1 - 4] = NULLcolor;
+				}
+			}
+			if (ie.code == 0) { get.x = ie.value; }
+			else if (ie.code == 1) { get.y = ie.value; }
+			else if (ie.code == 24)
+			{
+
+				end.x = a * get.x + b * get.y + c;
+				end.y = d * get.x + e * get.y + f;
+				if ((end.x >= 80 && end.x <= 273) && (end.y >= 4 && end.y <= 236))
+				{
+
+					pressure = ie.value;
+					dx = end.x - start.x; dy = end.y - start.y;
+					x1 = start.x; y1 = start.y;
+					if (dx < 0) { addx = -1; dx = -dx; } // if dx, dy are minus, addx, addy minus too. 
+					else { addx = 1; }
+					if (dy < 0) { addy = -1;  dy = -dy; }
+					else { addy = 1; }
+
+					for (i = 0; i < dx; i++)
+					{ //dx is x's increase
+						x1 += addx;
+						/**(pfbdata + x1 + start.y * 320) = CurrentColor;
+						*(pfbdata + x1 + end.y * 320) = CurrentColor;*/
+						tmp[x1 - 80][start.y - 4] = purple;
+						tmp[x1 - 80][end.y - 4] = purple;
+					}
+					for (i = 0; i < dy; i++)
+					{//dy is y's increase
+						y1 += addy;
+						/**(pfbdata + start.x + y1 * 320) = CurrentColor;
+						*(pfbdata + end.x + y1 * 320) = CurrentColor;*/
+						tmp[start.x - 80][y1 - 4] = purple;
+						tmp[end.x - 80][y1 - 4] = purple;
+					}
+					PrintAry(tmp);
+					if (pressure == 0)
+					{
+						//x1 = start.x; y1 = start.y;
+						for (i = 0; i < dx; i++) {
+							//x1 += addx;
+							for (j = start.y; j < end.y; j++)
+							{
+
+								/**(pfbdata + x1 + start.y * 320) = CurrentColor;
+								*(pfbdata + x1 + end.y * 320) = CurrentColor;*/
+								if ((start.x + i) - 80 < 194 && j < 233)
+									{selected[(start.x + i) - 80][j - 4] = 1;}
+							}
+						}
+						break;
+					}
+				}
+			}
+		}
+	}
+	//move start
+	for (i = 0; i < 233; i++)
+	{
+		for (j = 0; j < 194; j++)
+		{
+			tmp2[j][i] = NULLcolor;
+		}
+	} // clear draw area
+
+	while (R_chk == 0)
+	{
+		read(fd, &ie, sizeof(struct input_event));
+		if (ie.type == 3) {
+			if (ie.code == 0) { get.x = ie.value; }
+			else if (ie.code == 1) { get.y = ie.value; }
+			else if (ie.code == 24) {
+				start.x = a * get.x + b * get.y + c;
+				start.y = d * get.x + e * get.y + f;
+				if ((start.x >= 80 && start.x <= 273) && (start.y >= 4 && start.y <= 236)) {
+					R_chk = 1;
+				}
+				else return;
+			}
+		}
+	}
+
+	while (R_chk != 0)
+	{
+		read(fd, &ie, sizeof(struct input_event));
+		x1 = start.x; y1 = start.y;
+
+		if (ie.type == 3)
+		{
+			if (ie.code == 0) { get.x = ie.value; }
+			else if (ie.code == 1) { get.y = ie.value; }
+			else if (ie.code == 24)
+			{
+
+				end.x = a * get.x + b * get.y + c;
+				end.y = d * get.x + e * get.y + f;
+				if ((end.x >= 80 && end.x <= 273) && (end.y >= 4 && end.y <= 236))
+				{
+					pressure = ie.value;
+					dx = end.x - start.x; dy = end.y - start.y;
+					if (pressure == 0)
+					{
+						for (i = 0; i < 233; i++)
+						{
+							for (j = 0; j < 194; j++)
+							{
+								if (selected[j][i] == 1)
+								{
+									if (j + dx < 233 && i + dy < 194)
+									{
+										tmp2[j + dx][i + dy] = DrawArea[j][i];
+									}
+								}
+							}
+						} // clear draw area
+						for (i = 0; i < 233; i++)
+						{
+							for (j = 0; j < 194; j++)
+							{
+								if (selected[j][i] == 1)
+								{
+									DrawArea[j][i] = white;
+								}
+							}
+						} // clear draw area
+						for (i = 0; i < 233; i++)
+						{
+							for (j = 0; j < 194; j++)
+							{
+								if (tmp2[j][i] != NULLcolor)
+								{
+									DrawArea[j][i] = tmp2[j][i];
+								}
+							}
+						} // clear draw area
+						PrintDrawArea();
+						break;
+					}
+				}
+			}
+		}
+	}
+}
 void Rectangle(unsigned short CurrentColor){ //This function based on Line func.
 	int addx = 0;
 	int addy = 0;
@@ -597,8 +804,9 @@ void Rectangle(unsigned short CurrentColor){ //This function based on Line func.
 				start.x = a * get.x + b * get.y + c;
 				start.y = d * get.x + e * get.y + f;
 				if((start.x>=80 && start.x<=273) && (start.y >=4 && start.y<=236)){
-				R_chk = 1; 
+					R_chk = 1; 
 				}
+				else return;
 			}
 		}
 	}

@@ -29,6 +29,7 @@ unsigned short yellow;
 unsigned short darkblue;
 unsigned short blue;
 unsigned short black;
+unsigned short purple;
 unsigned short CurrentColor;
 unsigned short tmpColor;
 unsigned short NULLcolor;

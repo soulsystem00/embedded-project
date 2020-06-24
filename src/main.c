@@ -11,6 +11,7 @@ int main(void) {
 	darkblue = makepixel(0,0,128);
 	blue = makepixel(0,0,255);
 	black = makepixel(0,0,0);
+	purple = makepixel(163,73,164);
 
 	NULLcolor = makepixel(128,128,128);
 
@@ -122,8 +123,8 @@ int main(void) {
 				printf("start Select\n");
 				//TODO("implement Select Function")
 
-				//Selete();
-				goto start;
+				Selete();
+				//goto start;
 			}	
 			else if(ShapeMod == 5)
 			{
