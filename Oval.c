@@ -76,7 +76,7 @@ void clearLcd() {
 void makeLineOval(unsigned short color){
         int i, j, tmp;
 	int cnt;
- 
+ 	unsigned short blue = makepixel(0, 255, 0);
 	int x, y, a_2, b_2, d1, a1, b1, mx, my, x_move, y_move;
 	int chk = 0;
 	int pressure = -1;
@@ -103,6 +103,82 @@ void makeLineOval(unsigned short color){
 		read(fd, &ie, sizeof(struct input_event));
 		if (ie.type == 3)
 		{
+			if(end.y > 0){
+			b1 = end.y - y_move;
+			x = 0;
+			y = b1;
+			d1 = (4 * b_2 + (a_2 * (1 - (4 * b1)))) / 4;
+
+			offset = (y + y_move) * 320 + (x + x_move);  
+			*(pfbdata + offset) = 0;
+			offset = (y + y_move) * 320 + ((-1)*x + x_move);  
+			*(pfbdata + offset) = 0;
+			offset = ((-1)*y + y_move) * 320 + (x + x_move);  
+			*(pfbdata + offset) = 0;
+			offset = ((-1)*y + y_move) * 320 + ((-1)*x + x_move);  
+			*(pfbdata + offset) = 0; // draw starting point x
+
+			while(b_2 * x < a_2 * y)
+			{
+				++x;
+				if(d1 < 0)
+				{
+					d1 += b_2 *((2 * x) + 1);	
+ 				}
+				else
+				{
+					--y;
+					d1 += b_2 * ((2 * x) + 1) - (2 * a_2 * y);
+				}
+					
+				offset = (y + y_move) * 320 + (x + x_move);
+                        	*(pfbdata + offset) = 0;
+                        	offset = (y + y_move) * 320 + ((-1)*x + x_move);
+                        	*(pfbdata + offset) = 0;
+                        	offset = ((-1)*y + y_move) * 320 + (x + x_move);
+                        	*(pfbdata + offset) = 0;
+                       		offset = ((-1)*y + y_move) * 320 + ((-1)*x + x_move);
+                        	*(pfbdata + offset) = 0;
+			} // end of x draw */
+
+			x = a1;
+			y = 0;
+			d1 = ((4 * a_2) + b_2 * (1 - 4 * a1)) / 4;
+
+			offset = (y + y_move) * 320 + (x + x_move);
+                        *(pfbdata + offset) = 0;
+                        offset = (y + y_move) * 320 + ((-1)*x + x_move);
+                        *(pfbdata + offset) = 0;
+                        offset = ((-1)*y + y_move) * 320 + (x + x_move);
+                        *(pfbdata + offset) = 0;
+                        offset = ((-1)*y + y_move) * 320 + ((-1)*x + x_move);
+                        *(pfbdata + offset) = 0;
+
+			while(b_2 * x > a_2 * y)
+			{
+				++y;
+				if (d1 < 0)
+				{
+					d1 += a_2 * ((2 * y) + 1);
+				}
+				else
+				{
+					--x;
+					d1 += ((-2) * b_2 * x) + (a_2*(2 * y + 1));
+				}
+					
+				offset = (y + y_move) * 320 + (x + x_move);
+                        	*(pfbdata + offset) = 0;
+                        	offset = (y + y_move) * 320 + ((-1)*x + x_move);
+                        	*(pfbdata + offset) = 0;
+                        	offset = ((-1)*y + y_move) * 320 + (x + x_move);
+                        	*(pfbdata + offset) = 0;
+                        	offset = ((-1)*y + y_move) * 320 + ((-1)*x + x_move);
+                        	*(pfbdata + offset) = 0;
+				
+			} // end of y draw
+			}
+
 			if (ie.code == 0) { get.x = ie.value; }
 			else if (ie.code == 1) { get.y = ie.value; }
 			else if (ie.code == 24)
@@ -203,7 +279,7 @@ void makeLineOval(unsigned short color){
                         	*(pfbdata + offset) = color;
                         	offset = ((-1)*y + y_move) * 320 + ((-1)*x + x_move);
                         	*(pfbdata + offset) = color;
-				break;
+				
 			} // end of y draw
 		}
 		} // end of if
