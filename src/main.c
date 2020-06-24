@@ -110,8 +110,8 @@ int main(void) {
 				printf("start Oval\n");
 				//TODO("implement Oval Function")
 
-				//Oval(CurrentColor);
-				goto start;
+				Oval(CurrentColor);
+				//goto start;
 			}
 			else if(ShapeMod == 3)
 			{

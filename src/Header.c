@@ -577,7 +577,225 @@ void FillinitColor() {
                 }
         }
 }
-void Oval(unsigned short CurrentColor){/* implement the function on here */}
+void Oval(unsigned short color)
+{
+	int i, j, tmp;
+	int cnt;
+	unsigned short blue = makepixel(0, 255, 0);
+	int x, y, a_2, b_2, d1, a1, b1, mx, my, x_move, y_move;
+	int chk = 0;
+	int pressure = -1;
+	Point get, start, end;
+	printf("Oval start coordinate\n");
+	while (chk == 0)
+	{
+		read(fd, &ie, sizeof(struct input_event));
+		if (ie.type == 3) {
+			if (ie.code == 0) { get.x = ie.value; }
+			else if (ie.code == 1) { get.y = ie.value; }
+			else if (ie.code == 24)
+			{
+				pressure = ie.value;
+				start.x = a * get.x + b * get.y + c;
+				start.y = d * get.x + e * get.y + f;
+				if ((start.x >= 80 && start.x <= 273) && (start.y >= 4 && start.y <= 236)) {
+					chk = 1;
+				}
+				else return;
+			}
+		} // end of setting start
+	} // end of start
+	printf("Oval END coordinate\n");
+	while (pressure != 0)
+	{
+		read(fd, &ie, sizeof(struct input_event));
+		if (ie.type == 3)
+		{
+			if (end.y > 0) {
+				b1 = end.y - y_move;
+				x = 0;
+				y = b1;
+				d1 = (4 * b_2 + (a_2 * (1 - (4 * b1)))) / 4;
+
+				offset = (y + y_move) * 320 + (x + x_move);
+				*(pfbdata + offset) = white;
+				offset = (y + y_move) * 320 + ((-1) * x + x_move);
+				*(pfbdata + offset) = white;
+				offset = ((-1) * y + y_move) * 320 + (x + x_move);
+				*(pfbdata + offset) = white;
+				offset = ((-1) * y + y_move) * 320 + ((-1) * x + x_move);
+				*(pfbdata + offset) = white; // draw starting point x
+
+				while (b_2 * x < a_2 * y)
+				{
+					++x;
+					if (d1 < 0)
+					{
+						d1 += b_2 * ((2 * x) + 1);
+					}
+					else
+					{
+						--y;
+						d1 += b_2 * ((2 * x) + 1) - (2 * a_2 * y);
+					}
+
+					offset = (y + y_move) * 320 + (x + x_move);
+					*(pfbdata + offset) = white;
+					offset = (y + y_move) * 320 + ((-1) * x + x_move);
+					*(pfbdata + offset) = white;
+					offset = ((-1) * y + y_move) * 320 + (x + x_move);
+					*(pfbdata + offset) = white;
+					offset = ((-1) * y + y_move) * 320 + ((-1) * x + x_move);
+					*(pfbdata + offset) = white;
+				} // end of x draw */
+
+				x = a1;
+				y = 0;
+				d1 = ((4 * a_2) + b_2 * (1 - 4 * a1)) / 4;
+
+				offset = (y + y_move) * 320 + (x + x_move);
+				*(pfbdata + offset) = white;
+				offset = (y + y_move) * 320 + ((-1) * x + x_move);
+				*(pfbdata + offset) = white;
+				offset = ((-1) * y + y_move) * 320 + (x + x_move);
+				*(pfbdata + offset) = white;
+				offset = ((-1) * y + y_move) * 320 + ((-1) * x + x_move);
+				*(pfbdata + offset) = white;
+
+				while (b_2 * x > a_2 * y)
+				{
+					++y;
+					if (d1 < 0)
+					{
+						d1 += a_2 * ((2 * y) + 1);
+					}
+					else
+					{
+						--x;
+						d1 += ((-2) * b_2 * x) + (a_2 * (2 * y + 1));
+					}
+
+					offset = (y + y_move) * 320 + (x + x_move);
+					*(pfbdata + offset) = white;
+					offset = (y + y_move) * 320 + ((-1) * x + x_move);
+					*(pfbdata + offset) = white;
+					offset = ((-1) * y + y_move) * 320 + (x + x_move);
+					*(pfbdata + offset) = white;
+					offset = ((-1) * y + y_move) * 320 + ((-1) * x + x_move);
+					*(pfbdata + offset) = white;
+
+				} // end of y draw
+			}
+
+			if (ie.code == 0) { get.x = ie.value; }
+			else if (ie.code == 1) { get.y = ie.value; }
+			else if (ie.code == 24)
+			{
+				if ((start.x >= 80 && start.x <= 273) && (start.y >= 4 && start.y <= 236))
+				{
+					end.x = a * get.x + b * get.y + c;
+					end.y = d * get.x + e * get.y + f;
+					pressure = ie.value;
+					// end of setting end
+
+					if (start.x > end.x)
+					{
+						tmp = start.x;
+						start.x = end.x;
+						end.x = tmp;
+					} // swap of x
+
+					if (start.y > end.y)
+					{
+						tmp = start.y;
+						start.y = end.y;
+						end.y = tmp;
+					} // swap of y
+
+					x_move = (start.x + end.x) / 2;
+					y_move = (start.y + end.y) / 2;
+
+					a1 = end.x - x_move;
+					b1 = end.y - y_move;
+					x = 0;
+					y = b1;
+					a_2 = a1 * a1;
+					b_2 = b1 * b1;
+					d1 = (4 * b_2 + (a_2 * (1 - (4 * b1)))) / 4;
+
+					offset = (y + y_move) * 320 + (x + x_move);
+					*(pfbdata + offset) = color;
+					offset = (y + y_move) * 320 + ((-1) * x + x_move);
+					*(pfbdata + offset) = color;
+					offset = ((-1) * y + y_move) * 320 + (x + x_move);
+					*(pfbdata + offset) = color;
+					offset = ((-1) * y + y_move) * 320 + ((-1) * x + x_move);
+					*(pfbdata + offset) = color; // draw starting point x
+
+					while (b_2 * x < a_2 * y)
+					{
+						++x;
+						if (d1 < 0)
+						{
+							d1 += b_2 * ((2 * x) + 1);
+						}
+						else
+						{
+							--y;
+							d1 += b_2 * ((2 * x) + 1) - (2 * a_2 * y);
+						}
+
+						offset = (y + y_move) * 320 + (x + x_move);
+						*(pfbdata + offset) = color;
+						offset = (y + y_move) * 320 + ((-1) * x + x_move);
+						*(pfbdata + offset) = color;
+						offset = ((-1) * y + y_move) * 320 + (x + x_move);
+						*(pfbdata + offset) = color;
+						offset = ((-1) * y + y_move) * 320 + ((-1) * x + x_move);
+						*(pfbdata + offset) = color;
+					} // end of x draw */
+
+					x = a1;
+					y = 0;
+					d1 = ((4 * a_2) + b_2 * (1 - 4 * a1)) / 4;
+
+					offset = (y + y_move) * 320 + (x + x_move);
+					*(pfbdata + offset) = color;
+					offset = (y + y_move) * 320 + ((-1) * x + x_move);
+					*(pfbdata + offset) = color;
+					offset = ((-1) * y + y_move) * 320 + (x + x_move);
+					*(pfbdata + offset) = color;
+					offset = ((-1) * y + y_move) * 320 + ((-1) * x + x_move);
+					*(pfbdata + offset) = color;
+
+					while (b_2 * x > a_2 * y)
+					{
+						++y;
+						if (d1 < 0)
+						{
+							d1 += a_2 * ((2 * y) + 1);
+						}
+						else
+						{
+							--x;
+							d1 += ((-2) * b_2 * x) + (a_2 * (2 * y + 1));
+						}
+
+						offset = (y + y_move) * 320 + (x + x_move);
+						*(pfbdata + offset) = color;
+						offset = (y + y_move) * 320 + ((-1) * x + x_move);
+						*(pfbdata + offset) = color;
+						offset = ((-1) * y + y_move) * 320 + (x + x_move);
+						*(pfbdata + offset) = color;
+						offset = ((-1) * y + y_move) * 320 + ((-1) * x + x_move);
+						*(pfbdata + offset) = color;
+
+					} // end of y draw
+				}
+			}
+		} // end of if
+	} // end of while
+}
 void Selete()
 {
 	unsigned short tmp[194][233]; //selected area rectangle
