@@ -30,10 +30,12 @@ unsigned short darkblue;
 unsigned short blue;
 unsigned short black;
 unsigned short CurrentColor;
+unsigned short tmpColor;
 int ShapeMod;
 int ColorMod;
 int DrawMod;
-
+unsigned short DrawArea[194][233];
+unsigned short R_DrawArea[240][320];
 //int _Line[1584];
 //int _Rectangle[1584];
 typedef struct _Point {
@@ -56,9 +58,13 @@ void PrintScreen(int Screen[], int size);
 void FreeDraw(unsigned short color);
 void clearDraw();
 int setMod(Point touch);
-
+void FillinitColor();
 void Line(unsigned short CurrentColor);
 void Rectangle(unsigned short CurrentColor);
 void Oval(unsigned short CurrentColor);
 void Selete();
 void Erase();
+
+void Fill(unsigned short CurrentColor);
+void FillFunction(int x, int y,unsigned short CurrentColor);
+void PrintAry(unsigned short Screen[194][233]);

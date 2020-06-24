@@ -11,6 +11,13 @@ int main(void) {
 	darkblue = makepixel(0,0,128);
 	blue = makepixel(0,0,255);
 	black = makepixel(0,0,0);
+	for (i = 0; i <320; i++)
+	{
+		for (j = 0; j < 240; j++)
+		{
+			R_DrawArea[j][i] = white;
+		}
+	}
 	Point touch;
 
         pressure = -1;
@@ -20,6 +27,13 @@ int main(void) {
         int x1, x2, y1, y2;
         fbfd = open(FBDEVFILE, O_RDWR);
 
+	for(i = 0;i<233;i++)
+	{
+		for(j=0;j<194;j++)
+		{
+			DrawArea[j][i] = white;
+		}
+	} // clear draw area
         if (fbfd < 0) {
                 perror("fbdev open");
                 exit(1);
@@ -48,6 +62,8 @@ int main(void) {
         setCalibration();
         clearLcd();
 	PrintScreen(Screen,sizeof(Screen)/sizeof(int));
+	FillinitColor();
+	PrintDrawArea();
 	start:
 	printf("start touch\n");
  	while(1)
@@ -75,54 +91,62 @@ int main(void) {
 	printf("start draw\n");
 	while(1)
 	{
-		if(ShapeMod == 0)
+		if(DrawMod == 0)
 		{
-			printf("start Line\n");
-			//TODO("implement Line Function")
+			if(ShapeMod == 0)
+			{
+				printf("start Line\n");
+				//TODO("implement Line Function")
 
-			Line(CurrentColor);
-		}
-		else if(ShapeMod == 1)
-		{
-			printf("start Rectangle\n");
-			//TODO("implement Rectangle Function")
+				Line(CurrentColor);
+			}
+			else if(ShapeMod == 1)
+			{
+				printf("start Rectangle\n");
+				//TODO("implement Rectangle Function")
 			
-			Rectangle(CurrentColor);
-			//goto start;
-		}
-		else if(ShapeMod == 2)
-		{
-			printf("start Oval\n");
-			//TODO("implement Oval Function")
+				Rectangle(CurrentColor);
+				goto start;
+			}
+			else if(ShapeMod == 2)
+			{
+				printf("start Oval\n");
+				//TODO("implement Oval Function")
 
-			//Oval(CurrentColor);
-			goto start;
-		}
-		else if(ShapeMod == 3)
-		{
-			printf("start FreeDraw\n");
-			FreeDraw(CurrentColor);
-		}
-		else if(ShapeMod == 4)
-		{
-			printf("start Select\n");
-			//TODO("implement Select Function")
+				//Oval(CurrentColor);
+				goto start;
+			}
+			else if(ShapeMod == 3)
+			{
+				printf("start FreeDraw\n");
+				FreeDraw(CurrentColor);
+			}
+			else if(ShapeMod == 4)
+			{
+				printf("start Select\n");
+				//TODO("implement Select Function")
 
-			//Selete();
-			goto start;
-		}	
-		else if(ShapeMod == 5)
-		{
-			printf("start Erase\n");
-			//TODO("implement Erase Function")
+				//Selete();
+				goto start;
+			}	
+			else if(ShapeMod == 5)
+			{
+				printf("start Erase\n");
+				//TODO("implement Erase Function")
 
-			Erase();
+				Erase();
+			}
+			else if(ShapeMod == 6)
+			{
+				printf("start Clear\n");
+				clearDraw();
+				goto start;	
+			}
 		}
-		else if(ShapeMod == 6)
+		else if(DrawMod == 1)
 		{
-			printf("start Clear\n");
-			clearDraw();
-			goto start;	
+			printf("start Fill\n");
+			Fill(CurrentColor);
 		}
 		if(!(start.x>=79 && start.x<=272) && (start.y>=3 && start.y<=235))
 		{ 

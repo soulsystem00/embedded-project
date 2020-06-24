@@ -60,18 +60,18 @@ void makeLineBox(Point start, Point end, unsigned short color){
                 start.y = end.y;
                 end.y = tmp;
         }
-        for (j = start.x; j < end.x; j++) {
-                offset = start.y * 320 + j;
-                *(pfbdata + offset) = color;
-                offset = end.y * 320 + j;
-                *(pfbdata + offset) = color;
+        for (j = start.x; j <= end.x; j++) {
+				offset = start.y * 320 + j;
+				*(pfbdata + offset) = color;
+				offset = end.y * 320 + j;
+				*(pfbdata + offset) = color;
         }
-        for (i = start.y; i < end.y; i++) {
-                offset = i * 320 + start.x;
-                *(pfbdata + offset) = color;
-                offset = i * 320 + end.x;
-                *(pfbdata + offset) = color;
-        }
+		for (i = start.y; i <= end.y; i++) {
+				offset = i * 320 + start.x;
+				*(pfbdata + offset) = color;
+				offset = i * 320 + end.x;
+				*(pfbdata + offset) = color;
+		}
 }
 
 void makeLineBox2(int sx,int sy, int ex,int ey, unsigned short color){
@@ -86,13 +86,13 @@ void makeLineBox2(int sx,int sy, int ex,int ey, unsigned short color){
                 sy = ey;
                 ey = tmp;
         }
-        for (j = sx; j < ex; j++) {
+        for (j = sx; j <= ex; j++) {
                 offset = sy * 320 + j;
                 *(pfbdata + offset) = color;
                 offset = ey * 320 + j;
                 *(pfbdata + offset) = color;
         }
-        for (i = sy; i < ey; i++) {
+        for (i = sy; i <= ey; i++) {
                 offset = i * 320 + sx;
                 *(pfbdata + offset) = color;
                 offset = i * 320 + ex;
@@ -100,37 +100,89 @@ void makeLineBox2(int sx,int sy, int ex,int ey, unsigned short color){
         }
 }
 
+void makeLineBox3(int sx,int sy, int ex,int ey, int ary[194][233]){
+        int i, j, tmp;
+	for(i = 0;i<194;i++)
+	{
+		for(j = 0;j<233;j++)
+		{
+			ary[i][j] = 0;
+		}
+	}
+        if (sx > ex) {
+                tmp = sx;
+                sx = ex;
+                ex = tmp;
+        }
+        if (sy > ey) {
+                tmp = sy;
+                sy = ey;
+                ey = tmp;
+        }
+        for (j = sx; j <= ex; j++) {
+		ary[j][sy] = 1;
+		ary[j][ey] = 1;
+                /*offset = sy * 320 + j;
+                *(pfbdata + offset) = color;
+                offset = ey * 320 + j;
+                *(pfbdata + offset) = color;*/
+        }
+        for (i = sy; i <= ey; i++) {
+		ary[sx][i] = 1;
+		ary[ex][i] = 1;
+                /*offset = i * 320 + sx;
+                *(pfbdata + offset) = color;
+                offset = i * 320 + ex;
+                *(pfbdata + offset) = color;*/
+        }
+}
+
+void makeLineBox4(Point start, Point end, unsigned short color) {
+	int i, j, tmp;
+	if (start.x > end.x) {
+		tmp = start.x;
+		start.x = end.x;
+		end.x = tmp;
+	}
+	if (start.y > end.y) {
+		tmp = start.y;
+		start.y = end.y;
+		end.y = tmp;
+	}
+	for (j = start.x; j <= end.x; j++) {
+		offset = start.y * 320 + j;
+		*(pfbdata + offset) = color;
+		//R_DrawArea[j][start.y] = color;
+		offset = end.y * 320 + j;
+		*(pfbdata + offset) = color;
+		//R_DrawArea[j][end.y] = color;
+	}
+	for (i = start.y; i <= end.y; i++) {
+		offset = i * 320 + start.x;
+		*(pfbdata + offset) = color;
+		//R_DrawArea[start.x][i] = color;
+		offset = i * 320 + end.x;
+		*(pfbdata + offset) = color; 
+		//R_DrawArea[end.x][i] = color;
+	}
+}
+
 void FreeDraw(unsigned short color)
 {
-	read(fd, &ie, sizeof(struct input_event));
-	
+	//read(fd, &ie, sizeof(struct input_event));
+	unsigned short tmp[194][233];
 	if(ie.type == 3)
 	{
 		if(ie.code == 0) get.x = ie.value;
 		if(ie.code == 1) get.y = ie.value;
 		if(ie.code == 24)
 		{
+
 			start.x = a*get.x+b*get.y+c;
 			start.y = d*get.x+e*get.y+f;
 			if((start.x>=80 && start.x<=273) && (start.y >=4 && start.y<=236))
 			{
-				offset = (start.y + 1) * 320 + (start.x + 1);
-				*(pfbdata + offset) = color;
-				offset = (start.y +1) * 320 + start.x;
-				*(pfbdata + offset) = color;
-				offset = start.y * 320 + (start.x+1);
-				*(pfbdata + offset) = color;
 				offset = start.y * 320 + start.x;
-				*(pfbdata + offset) = color;
-				offset = (start.y -1) * 320 + (start.x -1);
-				*(pfbdata + offset) = color;
-				offset = (start.y -1) * 320 + start.x;
-				*(pfbdata + offset) = color;
-				offset = start.y * 320 + (start.x-1);
-				*(pfbdata + offset) = color;
-				offset = (start.y - 1) * 320 + (start.x + 1);
-				*(pfbdata + offset) = color;
-				offset = (start.y +1) * 320 + (start.x-1);
 				*(pfbdata + offset) = color;
 			}
 		}
@@ -156,6 +208,70 @@ void PrintScreen(int Screen[], int size)
 		}
 	}
 }
+
+void PrintAry(unsigned short Screen[194][233])
+{
+	int i,j;
+	int count = 0;
+	
+	for(i = 0;i<233;i++)
+	{
+		for(j=0;j<194;j++)
+		{
+			offset = (i+4) * 320 + (j+80);
+			*(pfbdata + offset) = white;
+		}
+	} // clear draw area
+
+	for(i = 0;i<233;i++)
+	{
+		for(j=0;j<194;j++)
+		{
+			offset = (i+4) * 320 + (j+80);
+			*(pfbdata + offset) = DrawArea[j][i];
+		}
+	} // Draw Saved Pixel
+
+	for(i = 0;i<233;i++)
+	{
+		for(j=0;j<194;j++)
+		{
+			offset = (i+4) * 320 + (j+80);
+			if(Screen[j][i] != white)
+				*(pfbdata + offset) = Screen[j][i];
+		}
+	} // Draw tmp pixel
+}
+
+void SaveAry(unsigned short Screen[194][233])
+{
+	int i,j;
+
+	for(i = 0;i<233;i++)
+	{
+		for(j = 0;j<194;j++)
+		{
+			if(DrawArea[j][i] != Screen[j][i] && Screen[j][i] != white)
+				DrawArea[j][i] = Screen[j][i];
+			/*else if(DrawArea[j][i] != Screen[j][i] && Screen[j][i] == NULL)
+				DrawArea[j][i] = Screen[j][i];*/
+			
+		}		
+	}
+}
+
+void PrintDrawArea()
+{
+	int i,j;
+	for(i = 0;i<233;i++)
+	{
+		for(j=0;j<194;j++)
+		{
+			offset = (i+4) * 320 + (j+80);
+			*(pfbdata + offset) = DrawArea[j][i];
+		}
+	} // Draw Saved Pixel
+}
 void clearDraw() {
         int i, j;
         for (i = 4; i <= 236; i++) {
@@ -177,13 +293,13 @@ int setMod(Point touch)
 	Point DrawStart;
 	Point DrawEnd;
 
-	if((touch.x>=4 && touch.x<=75) && (touch.y>=34 && touch.y<=55))        {printf("sets mod Line\n");	 ShapeMod = 0; }
-	else if((touch.x>=4 && touch.x<=75) && (touch.y>=58 && touch.y<=79))   {printf("sets mod Rectangle\n");  ShapeMod = 1; }
-	else if((touch.x>=4 && touch.x<=75) && (touch.y>=82 && touch.y<=103))  {printf("sets mod Oval\n");	 ShapeMod = 2; }
-	else if((touch.x>=4 && touch.x<=75) && (touch.y>=106 && touch.y<=127)) {printf("sets mod FreeDraw\n");   ShapeMod = 3; }
-	else if((touch.x>=4 && touch.x<=75) && (touch.y>=130 && touch.y<=151)) {printf("sets mod Selete\n");	 ShapeMod = 4; }
-	else if((touch.x>=4 && touch.x<=75) && (touch.y>=154 && touch.y<=175)) {printf("sets mod Erase\n");	 ShapeMod = 5; }
-	else if((touch.x>=4 && touch.x<=75) && (touch.y>=178 && touch.y<=199)) {printf("sets mod Clear\n");	 ShapeMod = 6; }
+	if((touch.x>=4 && touch.x<=75) && (touch.y>=34 && touch.y<=55))        {printf("sets mod Line\n");	 ShapeMod = 0; DrawMod = 0;}
+	else if((touch.x>=4 && touch.x<=75) && (touch.y>=58 && touch.y<=79))   {printf("sets mod Rectangle\n");  ShapeMod = 1; DrawMod = 0;}
+	else if((touch.x>=4 && touch.x<=75) && (touch.y>=82 && touch.y<=103))  {printf("sets mod Oval\n");	 ShapeMod = 2; DrawMod = 0;}
+	else if((touch.x>=4 && touch.x<=75) && (touch.y>=106 && touch.y<=127)) {printf("sets mod FreeDraw\n");   ShapeMod = 3; DrawMod = 0;}
+	else if((touch.x>=4 && touch.x<=75) && (touch.y>=130 && touch.y<=151)) {printf("sets mod Selete\n");	 ShapeMod = 4; DrawMod = 0;}
+	else if((touch.x>=4 && touch.x<=75) && (touch.y>=154 && touch.y<=175)) {printf("sets mod Erase\n");	 ShapeMod = 5; DrawMod = 0;}
+	else if((touch.x>=4 && touch.x<=75) && (touch.y>=178 && touch.y<=199)) {printf("sets mod Clear\n");	 ShapeMod = 6; DrawMod = 0;}
 	
 	else if((touch.x>=277 && touch.x<=295) && (touch.y>=26 && touch.y<=44))  {printf("sets color white\n");   CurrentColor = white;}
 	else if((touch.x>=297 && touch.x<=315) && (touch.y>=26 && touch.y<=44))  {printf("sets color orange\n");  CurrentColor = orange;}
@@ -197,7 +313,7 @@ int setMod(Point touch)
 	else if((touch.x>=280 && touch.x<=314) && (touch.y>=154 && touch.y<=175)) {printf("sets draw mod PEN\n"); DrawMod = 0; }
 	else if((touch.x>=280 && touch.x<=314) && (touch.y>=178 && touch.y<=199)) {printf("sets draw mod Fill\n"); DrawMod = 1; }
 
-	else if((touch.x>=80 && touch.x<=273) && (touch.y>=4 && touch.y<=236)) {printf("selected Draw Area"); makeLineBox2(79,3,274,237,red); return 1;}
+	else if((touch.x>=80 && touch.x<=273) && (touch.y>=4 && touch.y<=236)) {printf("selected Draw Area\n"); makeLineBox2(79,3,274,237,red); return 1;}
 
 	if( ShapeMod == 0 )
 		{ShapeStart.x = 4; ShapeStart.y = 34; ShapeEnd.x = 75; ShapeEnd.y = 55;}
@@ -254,7 +370,7 @@ int setMod(Point touch)
 	makeLineBox2(297,87,315,105,black);
 
 	makeLineBox2(280,154,314,174,black);
-	makeLineBox2(280,178,315,199,black);
+	makeLineBox2(280,178,314,199,black);
 
 	makeLineBox(ShapeStart,ShapeEnd,red);
 	makeLineBox(ColorStart,ColorEnd,red);
@@ -262,67 +378,75 @@ int setMod(Point touch)
 	
 	return 0;
 }
+void Line(unsigned short CurrentColor) {
+	int count = 0;
+	int addx = 0;
+	int addy = 0;
+	int i, x1, y1;
+	int chk = 0;
+	int dx = 0; int dy = 0;
 
-void Line(unsigned short CurrentColor){ //Function Line
-	int dx, dy, count, addx, addy; //int for calculate position
-	int i, x1, y1; // i -> for loop, x1, y1 -> set start position
-	int chk = 0; // 0 -> no input(start position is null) , 1 -> start position is valid
-	
-	while(chk==0){ //set start position when touch input hits
+	while (chk == 0) {
 		read(fd, &ie, sizeof(struct input_event));
 		if (ie.type == 3) {
 			if (ie.code == 0) { get.x = ie.value; }
 			else if (ie.code == 1) { get.y = ie.value; }
-			else if (ie.code == 24) 
-			{
+			else if (ie.code == 24) {
+				pressure = ie.value;
 				start.x = a * get.x + b * get.y + c;
 				start.y = d * get.x + e * get.y + f;
-				chk = 1;
+				if ((start.x >= 80 && start.x <= 273) && (start.y >= 4 && start.y <= 236)) {
+					chk = 1;
+				}
+				else return;
 			}
 		}
 	}
-
-	printf("%d %d\n",dx,dy);
-	while(chk != 0){ //calculate position for drawing Line
+	while (pressure != 0) {
+		read(fd, &ie, sizeof(struct input_event));
 		x1 = start.x; y1 = start.y;
+
 		if (ie.type == 3) {
-			if (dx >= dy) { //erase if pen move
-				for (i = 0; i < dx; i++) {
-					x1 += addx;
-					count += dy;
-					if (count >= dx) {
-						y1 += addy;
-						count -= dx;
+			if ((end.x >= 80 && end.x <= 273) && (end.y >= 4 && end.y <= 236))
+			{
+				if (dx >= dy) {
+					for (i = 0; i < dx; i++) {
+						x1 += addx;
+						count += dy;
+						if (count >= dx) {
+							y1 += addy;
+							count -= dx;
+						}
+						*(pfbdata + x1 + y1 * 320) = white;
 					}
-					*(pfbdata + x1 + y1 * 320) = 0;
-				}
-			}//end of dx >= dy
-			else {
-				for (i = 0; i < dy; i++) {
-					y1 += addy; count += dx;
-					if (count >= dy) {
-						x1 += addx; count -= dy;
+				}//end of dx >= dy
+				else {
+					for (i = 0; i < dy; i++) {
+						y1 += addy; count += dx;
+						if (count >= dy) {
+							x1 += addx; count -= dy;
+						}
+						*(pfbdata + x1 + y1 * 320) = white;
 					}
-					*(pfbdata + x1 + y1 * 320) = 0;
-				}
-			}//end of else //erase if pen move
+				}//end of else 
+			}
 			if (ie.code == 0) { get.x = ie.value; }
 			else if (ie.code == 1) { get.y = ie.value; }
 			else if (ie.code == 24) {
-				if ((start.x >= 80 && start.x <= 273) && (start.y >= 4 && start.y <= 236)) {
-					end.x = a * get.x + b * get.y + c;
-					end.y = d * get.x + e * get.y + f;
+
+				end.x = a * get.x + b * get.y + c;
+				end.y = d * get.x + e * get.y + f;
+				if ((end.x >= 80 && end.x <= 273) && (end.y >= 4 && end.y <= 236)) {
 					pressure = ie.value;
 					dx = end.x - start.x; dy = end.y - start.y;
 					x1 = start.x; y1 = start.y;
-					
-					//여기부터는 알고리즘 부분. 그대로 유지하면 됩니다.
-					if (dx < 0) { addx = -1; dx = -dx; } //기울기가 음수일 때의 처리
-					else { addx = 1; } //양수라면 그대로.
-					if (dy < 0) { addy = -1;  dy = -dy; } //기울기가 음수일 때의 처리
-					else { addy = 1; } //양수라면 그대로.
-					if (dx >= dy) { // 기울기가 1보다 작은 경우
-						for (i = 0; i < dx; i++) { 
+					if (dx < 0) { addx = -1; dx = -dx; }
+					else { addx = 1; }
+					if (dy < 0) { addy = -1;  dy = -dy; }
+					else { addy = 1; }
+
+					if (dx >= dy) {
+						for (i = 0; i < dx; i++) {
 							x1 += addx;
 							count += dy;
 							if (count >= dx) {
@@ -332,7 +456,7 @@ void Line(unsigned short CurrentColor){ //Function Line
 							*(pfbdata + x1 + y1 * 320) = CurrentColor;
 						}
 					}//end of dx >= dy
-					else { //기울기가 1보다 큰 경우
+					else {
 						for (i = 0; i < dy; i++) {
 							y1 += addy; count += dx;
 							if (count >= dy) {
@@ -341,8 +465,9 @@ void Line(unsigned short CurrentColor){ //Function Line
 							*(pfbdata + x1 + y1 * 320) = CurrentColor;
 						}
 					}//end of else
-					if (pressure == 0) { //펜을 뗐을 때, 해당 좌표에 대한 그래프를 남기고 반복 종료.
-						x1 = start.x; y1 = start.y; //그래프를 그리기 위해 x1, y1 값 시작점으로 초기화
+
+					if (pressure == 0) {
+						x1 = start.x; y1 = start.y;
 						if (dx >= dy) {
 							for (i = 0; i < dx; i++) {
 								x1 += addx;
@@ -367,59 +492,258 @@ void Line(unsigned short CurrentColor){ //Function Line
 					}
 				}
 			}
+
 		}//end of ie. event handler
 	}// end of while
 }//end of fun Line
+/*
+void Line(unsigned short CurrentColor) {
+	int count = 0;
+	int addx = 0;
+	int addy = 0;
+	int i, x1, y1;
+	int chk = 0;
+	int dx = 0; int dy =0;
+	
+	unsigned short tmp[194][233];
+	
+	while(chk==0){
+		read(fd, &ie, sizeof(struct input_event));
+		if (ie.type == 3) {
+			if (ie.code == 0) { get.x = ie.value; }
+			else if (ie.code == 1) { get.y = ie.value; }
+			else if (ie.code == 24) {
+				pressure = ie.value;
+				start.x = a * get.x + b * get.y + c;
+				start.y = d * get.x + e * get.y + f;
+				if((start.x>=80 && start.x<=273) && (start.y >=4 && start.y<=236)){
+				chk = 1; 
+				}
+				else return;
+			}
+		}
+	}
+	while(pressure != 0){
+		read(fd, &ie, sizeof(struct input_event));
+		x1 = start.x; y1 = start.y;
+		for(i = 0;i<233;i++)
+		{
+			for(j=0;j<194;j++)
+			{
+				tmp[j][i] = white;
+			}
+		} // clear draw area
+		if (ie.type == 3) {
+			if ((end.x>=80 && end.x<=273) && (end.y >=4 && end.y<=236))
+			{
+				if (dx >= dy) {
+					for (i = 0; i < dx; i++) {
+						x1 += addx;
+						count += dy;
+						if (count >= dx) {
+							y1 += addy;
+							count -= dx;
+						}
+						//*(pfbdata + x1 + y1 * 320) = white;
+						tmp[x1 - 80][y1 - 4] = white;
+						
+					}
+				}//end of dx >= dy
+				else {	
+					for (i = 0; i < dy; i++) {
+						y1 += addy; count += dx;
+						if (count >= dy) {
+							x1 += addx; count -= dy;
+						}
+						//*(pfbdata + x1 + y1 * 320) = white;
+						tmp[x1-80][y1-4] = white;
+					}
+				}//end of else 
+			}
 
+			if (ie.code == 0) { get.x = ie.value; }
+			else if (ie.code == 1) { get.y = ie.value; }
+			else if (ie.code == 24) 
+			{
+				
+					end.x = a * get.x + b * get.y + c;
+					end.y = d * get.x + e * get.y + f;
+					if ((end.x>=80 && end.x<=273) && (end.y >=4 && end.y<=236)){
+						pressure = ie.value;
+						dx = end.x - start.x; dy = end.y - start.y;
+						x1 = start.x; y1 = start.y;
+						if (dx < 0) { addx = -1; dx = -dx; }
+						else { addx = 1; }
+						if (dy < 0) { addy = -1;  dy = -dy; }
+						else { addy = 1; }
+					
+						if (dx >= dy) {
+							for (i = 0; i < dx; i++) {
+								x1 += addx;
+								count += dy;
+								if (count >= dx) {
+									y1 += addy;
+									count -= dx;
+								}
+								//*(pfbdata + x1 + y1 * 320) = CurrentColor;
+								tmp[x1-80][y1-4] = CurrentColor;
+							}
+						}//end of dx >= dy
+						else {
+							for (i = 0; i < dy; i++) {
+								y1 += addy; count += dx;
+								if (count >= dy) {
+									x1 += addx; count -= dy;
+								}
+								//*(pfbdata + x1 + y1 * 320) = CurrentColor;
+								tmp[x1-80][y1-4] = CurrentColor;
+							
+							}
+						}//end of else
+						PrintAry(tmp);
+						if (pressure == 0) 
+						{
+							x1 = start.x; y1 = start.y;
+							if (dx >= dy) {
+								for (i = 0; i < dx; i++) {
+									x1 += addx;
+									count += dy;
+									if (count >= dx) {
+										y1 += addy;
+										count -= dx;
+									}
+									//*(pfbdata + x1 + y1 * 320) = CurrentColor;
+									tmp[x1-80][y1-4] = CurrentColor;
+								}
+							}//end of dx >= dy
+							else {
+								for (i = 0; i < dy; i++) {
+									y1 += addy; count += dx;
+									if (count >= dy) {
+										x1 += addx; count -= dy;
+									}
+									//*(pfbdata + x1 + y1 * 320) = CurrentColor;
+									tmp[x1-80][y1-4] = CurrentColor;
+								}
+							}//end of else
+							SaveAry(tmp);
+							PrintDrawArea();
+							break;
+						} 
+						
+					}
+				}
+			
+		}//end of ie. event handler
+	}// end of while
+}//end of fun Line
+*/
+void FillinitColor() {
+        int i, j;
+	int x = 278;
+	int y = 27;
+        for (i = 0; i <= 16; i++) {
+                for (j = 0; j <= 16; j++) {
+                        offset = (y + i) * 320 + (x + j);
+                        *(pfbdata + offset) = white;
+                }
+        }
+	y = y + 21;
+	for (i = 0; i <= 16; i++) {
+                for (j = 0; j <= 16; j++) {
+                        offset = (y + i) * 320 + (x + j);
+                        *(pfbdata + offset) = red;
+                }
+        }
+	y = y + 20;
+	for (i = 0; i <= 16; i++) {
+                for (j = 0; j <= 16; j++) {
+                        offset = (y + i) * 320 + (x + j);
+                        *(pfbdata + offset) = yellow;
+                }
+        }
+	y = y + 20;
+	for (i = 0; i <= 16; i++) {
+                for (j = 0; j <= 16; j++) {
+                        offset = (y + i) * 320 + (x + j);
+                        *(pfbdata + offset) = blue;
+                }
+        }
+	x = 298;
+	y = 27;
+	for (i = 0; i <= 16; i++) {
+                for (j = 0; j <= 16; j++) {
+                        offset = (y + i) * 320 + (x + j);
+                        *(pfbdata + offset) = orange;
+                }
+        }
+	y = y + 21;
+	for (i = 0; i <= 16; i++) {
+                for (j = 0; j <= 16; j++) {
+                        offset = (y + i) * 320 + (x + j);
+                        *(pfbdata + offset) = green;
+                }
+        }
+	y = y + 20;
+	for (i = 0; i <= 16; i++) {
+                for (j = 0; j <= 16; j++) {
+                        offset = (y + i) * 320 + (x + j);
+                        *(pfbdata + offset) = darkblue;
+                }
+        }
+	y = y + 20;
+	for (i = 0; i <= 16; i++) {
+                for (j = 0; j <= 16; j++) {
+                        offset = (y + i) * 320 + (x + j);
+                        *(pfbdata + offset) = black;
+                }
+        }
+}
 void Oval(unsigned short CurrentColor){/* implement the function on here */}
 void Selete(){/* implement the function on here */}
 
-void Rectangle(unsigned short CurrentColor)
-{
-	read(fd, &ie, sizeof(struct input_event));
+void Rectangle(unsigned short CurrentColor){ //This function based on Line func.
+	int R_chk = 0;
+	end.x = 0; end.y = 0;
 	
-	printf("type = %d, code = %d, value = %d\n",ie.type,ie.code,ie.value);
-	if(ie.type == 3)
-	{
-		if(ie.code == 0) get.x = ie.value;
-		if(ie.code == 1) get.y = ie.value;
-		if(ie.code == 24)
-		{
-			pressure = ie.value;
-			
-			start.x = a*get.x+b*get.y+c;
-			start.y = d*get.x+e*get.y+f;
-			while(pressure != 0)
-			{
-				
-				read(fd, &ie, sizeof(struct input_event));
-				if(ie.type == 3)
-				{
-					if(ie.code == 0) get.x = ie.value;
-					if(ie.code == 1) get.y = ie.value;
-					if(ie.code == 24)
-					{
-	if((end.x>=80 && end.x<=273) && (end.y>=4 && end.y<=236) && (start.x>=80 && start.x<=273) && (start.y>=4 && start.y<=236))
-						{makeLineBox(start,end,white);}
-						int pressure2 = ie.value;
-						if(pressure2 == 0) break;
-						end.x = a*get.x+b*get.y+c;
-						end.y = d*get.x+e*get.y+f;
-					
-					
-					}
-					printf("x = %d, y = %d\n",end.x,end.y);
-					if((end.x>=80 && end.x<=273) && (end.y>=4 && end.y<=236) && (start.x>=80 && start.x<=273) && (start.y>=4 && start.y<=236))
-						{makeLineBox(start,end,CurrentColor);}
-						
+	while(R_chk==0){
+		read(fd, &ie, sizeof(struct input_event));
+		if (ie.type == 3) {
+			if (ie.code == 0) { get.x = ie.value; }
+			else if (ie.code == 1) { get.y = ie.value; }
+			else if (ie.code == 24) {
+				start.x = a * get.x + b * get.y + c;
+				start.y = d * get.x + e * get.y + f;
+				if((start.x>=80 && start.x<=273) && (start.y >=4 && start.y<=236)){
+				R_chk = 1; 
 				}
 			}
 		}
 	}
-	printf("x = %d, y = %d\n",start.x,start.y);
-if((end.x>=80 && end.x<=273) && (end.y>=4 && end.y<=236) && (start.x>=80 && start.x<=273) && (start.y>=4 && start.y<=236))
-						{makeLineBox(start,end,CurrentColor);}
-}
+	while(R_chk != 0){
+		read(fd, &ie, sizeof(struct input_event));
+		
+		if (ie.type == 3) {
+			if ((end.x>=80 && end.x<=273) && (end.y >=4 && end.y<=236)){
+				makeLineBox(start, end, white);//���� �����
+			}
+			if (ie.code == 0) { get.x = ie.value; }
+			else if (ie.code == 1) { get.y = ie.value; }
+			else if (ie.code == 24) {
+					end.x = a * get.x + b * get.y + c;
+					end.y = d * get.x + e * get.y + f;
+					if ((end.x>=80 && end.x<=273) && (end.y >=4 && end.y<=236)){//�׸���
+					pressure = ie.value;
+					makeLineBox(start, end, CurrentColor);
+					if (pressure == 0) {//������ �׸��� ��ǥ ����
+						makeLineBox4(start, end, CurrentColor);
+						break;
+					} }
+				}
+			
+		}//end of ie. event handler
+	}// end of while
+}//end of fun Rec
 
 void Erase(){
 read(fd, &ie, sizeof(struct input_event));
@@ -455,4 +779,61 @@ read(fd, &ie, sizeof(struct input_event));
 			}
 		}
 	}
+}
+
+void Fill(unsigned short CurrentColor)
+{
+	printf("start Fill\n");
+	read(fd, &ie, sizeof(struct input_event));
+	
+	if(ie.type == 3)
+	{
+		if(ie.code == 0) get.x = ie.value;
+		if(ie.code == 1) get.y = ie.value;
+		if(ie.code == 24)
+		{
+			pressure = ie.value;
+			if( (pressure == 0) )
+			{
+				start.x = a*get.x+b*get.y+c;
+				start.y = d*get.x+e*get.y+f;
+				printf("%d %d\n",start.x,start.y);
+				if((start.x>=80 && start.x<=273) && (start.y >=4 && start.y<=236))
+					{	
+						offset = start.y *320 + start.x;
+						tmpColor = *(pfbdata + offset);
+						printf("%u\n", tmpColor);
+						printf("Fill Function start\n");
+						
+						FillFunction(start.x,start.y,CurrentColor);
+						printf("Fill Function inininin\n");
+					}
+				else
+					{return;}
+			}
+			
+		}
+	}
+}
+
+void FillFunction(int x, int y,unsigned short CurrentColor)
+{
+	
+	if(((x>=80 && x<=273) && (y >=4 && y<=236)) && (tmpColor != CurrentColor))
+	{
+		
+		offset = y * 320 + x;
+		if(*(pfbdata + offset) == tmpColor)
+		{
+			*(pfbdata + offset) = CurrentColor;
+			FillFunction(x,y+1,CurrentColor);
+			FillFunction(x,y-1,CurrentColor);
+			FillFunction(x+1,y,CurrentColor);
+			FillFunction(x-1,y,CurrentColor);
+		}
+		else return;
+	}
+	else return;
+
+	
 }
