@@ -15,7 +15,7 @@ int main(void) {
 	{
 		for (j = 0; j < 240; j++)
 		{
-			R_DrawArea[j][i] = white;
+			R_DrawArea[i][j] = white;
 		}
 	}
 	Point touch;
@@ -99,6 +99,8 @@ int main(void) {
 				//TODO("implement Line Function")
 
 				Line(CurrentColor);
+
+				goto start;
 			}
 			else if(ShapeMod == 1)
 			{
@@ -113,13 +115,14 @@ int main(void) {
 				printf("start Oval\n");
 				//TODO("implement Oval Function")
 
-				//Oval(CurrentColor);
+				Oval(CurrentColor);
 				goto start;
 			}
 			else if(ShapeMod == 3)
 			{
 				printf("start FreeDraw\n");
 				FreeDraw(CurrentColor);
+				goto start;
 			}
 			else if(ShapeMod == 4)
 			{
