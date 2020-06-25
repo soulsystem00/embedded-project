@@ -346,11 +346,9 @@ void Rectangle(unsigned short CurrentColor) { //This function based on Line func
 void Oval(unsigned short color)
 {
 	int i, j, x1, y1;
-	int cnt;
-	int x, y, a_2, b_2, d1, a1, b1, mx, my, x_move, y_move;
-	int _a1,_b1;
+	int x, y, a_2, b_2, d1, a1, b1, x_move, y_move;
 	int chk = 0;
-	int pressure = -1;
+
 	printf("Oval start coordinate\n");
 	unsigned short tmp[194][233];
 	while (chk == 0)
@@ -371,6 +369,7 @@ void Oval(unsigned short color)
 			}
 		} // end of setting start
 	} // end of start
+
 	printf("Oval END coordinate\n");
 	while (pressure != 0)
 	{
@@ -385,10 +384,8 @@ void Oval(unsigned short color)
 		read(fd, &ie, sizeof(struct input_event));
 		if (ie.type == 3)
 		{
-			if (end.y > 0) {
-				b1 = end.y - y_move;
-				
-				if(b1 < 0) b1 = b1*-1;
+			if ((end.x >= 80 && end.x <= 273) && (end.y >= 4 && end.y <= 236)) {
+
 				x = 0;
 				y = b1;
 				d1 = (4 * b_2 + (a_2 * (1 - (4 * b1)))) / 4;
@@ -434,7 +431,8 @@ void Oval(unsigned short color)
 					tmp[((-1) * x + x_move) - 80][y + y_move - 4] = NULLcolor;
 					tmp[x + x_move - 80][((-1) * y + y_move) - 4] = NULLcolor;
 					tmp[((-1) * x + x_move) - 80][((-1) * y + y_move) - 4] = NULLcolor;
-				} // end of x draw */
+				} // end of x draw clear
+
 				if(a1 < 0) a1 = a1*-1;
 				x = a1;
 				y = 0;
@@ -479,8 +477,8 @@ void Oval(unsigned short color)
 					tmp[((-1) * x + x_move) - 80][y + y_move - 4] = NULLcolor;
 					tmp[x + x_move - 80][((-1) * y + y_move) - 4] = NULLcolor;
 					tmp[((-1) * x + x_move) - 80][((-1) * y + y_move) - 4] = NULLcolor;
-				} // end of y draw
-			}
+				} // end of y draw clear
+			} // end of clear
 			
 			if (ie.code == 0) { get.x = ie.value; }
 			else if (ie.code == 1) { get.y = ie.value; }
@@ -495,20 +493,6 @@ void Oval(unsigned short color)
 					pressure = ie.value;
 					// end of setting end
 
-					/*if (start.x > end.x)
-					{
-						tmp = start.x;
-						start.x = end.x;
-						end.x = tmp;
-					} // swap of x
-
-					if (start.y > end.y)
-					{
-						tmp = start.y;
-						start.y = end.y;
-						end.y = tmp;
-					} // swap of y*/
-
 					x_move = (x1 + end.x) / 2;
 					y_move = (y1 + end.y) / 2;
 
@@ -521,7 +505,7 @@ void Oval(unsigned short color)
 					y = b1;
 					a_2 = a1 * a1;
 					b_2 = b1 * b1;
-					d1 = (4 * b_2 + (a_2 * (1 - (4 * b1)))) / 4;
+					d1 = (4 * b_2 + (a_2 * (1 - (4 * b1)))) / 4; // end of setting x section
 
 					/*offset = (y + y_move) * 320 + (x + x_move);
 					*(pfbdata + offset) = color;
@@ -563,11 +547,11 @@ void Oval(unsigned short color)
 						tmp[((-1) * x + x_move) - 80][y + y_move - 4] = color;
 						tmp[x + x_move - 80][((-1) * y + y_move) - 4] = color;
 						tmp[((-1) * x + x_move) - 80][((-1) * y + y_move) - 4] = color;
-					} // end of x draw */
+					} // end of x draw
 
 					x = a1;
 					y = 0;
-					d1 = ((4 * a_2) + b_2 * (1 - 4 * a1)) / 4;
+					d1 = ((4 * a_2) + b_2 * (1 - 4 * a1)) / 4; // end of setting y section
 
 					/*offset = (y + y_move) * 320 + (x + x_move);
 					*(pfbdata + offset) = color;
@@ -611,13 +595,10 @@ void Oval(unsigned short color)
 						tmp[((-1) * x + x_move) - 80][((-1) * y + y_move) - 4] = color;
 
 					} // end of y draw
+
 					PrintAry(tmp);
+
 					if(pressure == 0){
-						a1 = end.x - x_move;
-						b1 = end.y - y_move;
-						printf("%d %d\n", a1,b1);
-						if(a1 < 0) a1 = a1*-1;
-						if(b1 < 0) b1 = b1*-1;
 						x = 0;
 						y = b1;
 						a_2 = a1 * a1;
@@ -668,7 +649,7 @@ void Oval(unsigned short color)
 							tmp[((-1) * x + x_move) - 80][y + y_move - 4] = color;
 							tmp[x + x_move - 80][((-1) * y + y_move) - 4] = color;
 							tmp[((-1) * x + x_move) - 80][((-1) * y + y_move) - 4] = color;
-						} // end of x draw */
+						} // end of x draw 
 
 						x = a1;
 						y = 0;
@@ -724,16 +705,12 @@ void Oval(unsigned short color)
 						SaveAry(tmp);
 						PrintDrawArea();
 						break;
-					}
-				}
-				printf("print tmp\n");
-				PrintAry(tmp);
-			}
-		} // end of if
-
-	} // end of while
-	
-}
+					} // end of save
+				} // end of draw
+			} 
+		} // end of Oval calculate 
+	} // end of touch
+} // end of Oval
 
 void FreeDraw(unsigned short color)
 {
