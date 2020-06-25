@@ -346,7 +346,7 @@ void Rectangle(unsigned short CurrentColor) { //This function based on Line func
 void Oval(unsigned short color)
 {
 	int i, j, x1, y1;
-	int x, y, a_2, b_2, d1, a1, b1, x_move, y_move;
+	int x=0, y=0, a_2=0, b_2=0, d1=0, a1=0, b1=0, x_move=0, y_move=0;
 	int chk = 0;
 
 	printf("Oval start coordinate\n");
