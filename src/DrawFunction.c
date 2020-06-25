@@ -347,7 +347,6 @@ void Oval(unsigned short color)
 {
 	int i, j;
 	int cnt;
-	unsigned short blue = makepixel(0, 255, 0);
 	int x, y, a_2, b_2, d1, a1, b1, mx, my, x_move, y_move;
 	int _a1,_b1;
 	int chk = 0;
@@ -611,11 +610,123 @@ void Oval(unsigned short color)
 						tmp[((-1) * x + x_move) - 80][((-1) * y + y_move) - 4] = color;
 
 					} // end of y draw
-					
+					PrintAry(tmp);
+					if(pressure == 0){
+						a1 = end.x - x_move;
+						b1 = end.y - y_move;
+						printf("%d %d\n", a1,b1);
+						if(a1 < 0) a1 = a1*-1;
+						if(b1 < 0) b1 = b1*-1;
+						x = 0;
+						y = b1;
+						a_2 = a1 * a1;
+						b_2 = b1 * b1;
+						d1 = (4 * b_2 + (a_2 * (1 - (4 * b1)))) / 4;
+
+						/*
+						offset = (y + y_move) * 320 + (x + x_move);
+						*(pfbdata + offset) = white;
+						offset = (y + y_move) * 320 + ((-1) * x + x_move);
+						*(pfbdata + offset) = white;
+						offset = ((-1) * y + y_move) * 320 + (x + x_move);
+						*(pfbdata + offset) = white;
+						offset = ((-1) * y + y_move) * 320 + ((-1) * x + x_move);
+						*(pfbdata + offset) = white;
+						*/
+						
+						tmp[x + x_move - 80][y + y_move - 4] = color;
+						tmp[((-1) * x + x_move) - 80][y + y_move - 4] = color;
+						tmp[x + x_move - 80][((-1) * y + y_move) - 4] = color;
+						tmp[((-1) * x + x_move) - 80][((-1) * y + y_move) - 4] = color;
+
+						while (b_2 * x < a_2 * y)
+						{
+							++x;
+							if (d1 < 0)
+							{
+								d1 += b_2 * ((2 * x) + 1);
+							}
+							else
+							{
+								--y;
+								d1 += b_2 * ((2 * x) + 1) - (2 * a_2 * y);
+							}
+
+							/*
+							offset = (y + y_move) * 320 + (x + x_move);
+							*(pfbdata + offset) = white;
+							offset = (y + y_move) * 320 + ((-1) * x + x_move);
+							*(pfbdata + offset) = white;
+							offset = ((-1) * y + y_move) * 320 + (x + x_move);
+							*(pfbdata + offset) = white;
+							offset = ((-1) * y + y_move) * 320 + ((-1) * x + x_move);
+							*(pfbdata + offset) = white;
+							*/
+							
+							tmp[x + x_move - 80][y + y_move - 4] = color;
+							tmp[((-1) * x + x_move) - 80][y + y_move - 4] = color;
+							tmp[x + x_move - 80][((-1) * y + y_move) - 4] = color;
+							tmp[((-1) * x + x_move) - 80][((-1) * y + y_move) - 4] = color;
+						} // end of x draw */
+
+						x = a1;
+						y = 0;
+						d1 = ((4 * a_2) + b_2 * (1 - 4 * a1)) / 4;
+
+						/*
+						offset = (y + y_move) * 320 + (x + x_move);
+						*(pfbdata + offset) = white;
+						offset = (y + y_move) * 320 + ((-1) * x + x_move);
+						*(pfbdata + offset) = white;
+						offset = ((-1) * y + y_move) * 320 + (x + x_move);
+						*(pfbdata + offset) = white;
+						offset = ((-1) * y + y_move) * 320 + ((-1) * x + x_move);
+						*(pfbdata + offset) = white;
+						*/
+						
+						tmp[x + x_move - 80][y + y_move - 4] = color;
+						tmp[((-1) * x + x_move) - 80][y + y_move - 4] = color;
+						tmp[x + x_move - 80][((-1) * y + y_move) - 4] = color;
+						tmp[((-1) * x + x_move) - 80][((-1) * y + y_move) - 4] = color;
+
+						while (b_2 * x > a_2 * y)
+						{
+							++y;
+							if (d1 < 0)
+							{
+								d1 += a_2 * ((2 * y) + 1);
+							}
+							else
+							{
+								--x;
+								d1 += ((-2) * b_2 * x) + (a_2 * (2 * y + 1));
+							}
+
+							/*
+							offset = (y + y_move) * 320 + (x + x_move);
+							*(pfbdata + offset) = white;
+							offset = (y + y_move) * 320 + ((-1) * x + x_move);
+							*(pfbdata + offset) = white;
+							offset = ((-1) * y + y_move) * 320 + (x + x_move);
+							*(pfbdata + offset) = white;
+							offset = ((-1) * y + y_move) * 320 + ((-1) * x + x_move);
+							*(pfbdata + offset) = white;
+							*/
+							
+							tmp[x + x_move - 80][y + y_move - 4] = color;
+							tmp[((-1) * x + x_move) - 80][y + y_move - 4] = color;
+							tmp[x + x_move - 80][((-1) * y + y_move) - 4] = color;
+							tmp[((-1) * x + x_move) - 80][((-1) * y + y_move) - 4] = color;
+
+						} // end of y draw						
+						
+						SaveAry(tmp);
+						PrintDrawArea();
+						break;
+					}
 				}
 				printf("print tmp\n");
 				PrintAry(tmp);
-				
 			}
 		} // end of if
 
