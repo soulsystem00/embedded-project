@@ -6,10 +6,6 @@ int fd, fbfd;
 struct fb_var_screeninfo fbvar;
 struct input_event ie;
 
-
-
-
-
 unsigned short white;
 unsigned short orange;
 unsigned short red;
