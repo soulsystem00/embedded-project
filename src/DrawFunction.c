@@ -498,7 +498,6 @@ void Oval(unsigned short color)
 
 					a1 = end.x - x_move;
 					b1 = end.y - y_move;
-					printf("%d %d\n", a1,b1);
 					if(a1 < 0) a1 = a1*-1;
 					if(b1 < 0) b1 = b1*-1;
 					x = 0;
