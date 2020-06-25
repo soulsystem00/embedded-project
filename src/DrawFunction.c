@@ -345,7 +345,7 @@ void Rectangle(unsigned short CurrentColor) { //This function based on Line func
 
 void Oval(unsigned short color)
 {
-	int i, j;
+	int i, j, x1, y1;
 	int cnt;
 	int x, y, a_2, b_2, d1, a1, b1, mx, my, x_move, y_move;
 	int _a1,_b1;
@@ -374,6 +374,7 @@ void Oval(unsigned short color)
 	printf("Oval END coordinate\n");
 	while (pressure != 0)
 	{
+		x1 = start.x; y1 = start.y;
 		for (i = 0; i < 233; i++)
 		{
 			for (j = 0; j < 194; j++)
@@ -508,8 +509,8 @@ void Oval(unsigned short color)
 						end.y = tmp;
 					} // swap of y*/
 
-					x_move = (start.x + end.x) / 2;
-					y_move = (start.y + end.y) / 2;
+					x_move = (x1 + end.x) / 2;
+					y_move = (y1 + end.y) / 2;
 
 					a1 = end.x - x_move;
 					b1 = end.y - y_move;
