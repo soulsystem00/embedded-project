@@ -365,7 +365,7 @@ void Oval(unsigned short color)
 				if ((start.x >= 80 && start.x <= 273) && (start.y >= 4 && start.y <= 236)) {
 					chk = 1;
 				}
-				else {SaveAry(tmp);PrintDrawArea();return;}
+				else return;
 			}
 		} // end of setting start
 	} // end of start
