@@ -1,1 +1,0 @@
-sudo modprobe spicc && sudo modprobe fbtft_device name=odroidc_tft32 rotate=270 gpios=reset:116,dc:115 speed=32000000 cs=0 && sudo modprobe -r ads7846 && sudo modprobe ads7846
