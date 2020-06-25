@@ -1,1 +1,1 @@
-gcc -o execute src/main.c src/Header.c src/Screen.c && ./execute
+gcc -o execute src/main.c src/CommonFun.c src/DrawFunction.c src/Screen.c && ./execute

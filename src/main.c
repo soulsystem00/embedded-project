@@ -1,4 +1,7 @@
 #include "../include/Header.h"
+#include "../include/Function.h"
+#include "../include/Var.h"
+
 extern int Screen[76800];
 
 
