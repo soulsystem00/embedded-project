@@ -734,7 +734,7 @@ void FreeDraw(unsigned short color)
 				DrawArea[start.x - 1 - 80][start.y - 4] = color;
 				DrawArea[start.x + 1 - 80][start.y - 1 - 4] = color;
 				DrawArea[start.x + 1 - 80][start.y + 1 - 4] = color;
-				/*offset = (start.y + 1) * 320 + (start.x + 1);
+				offset = (start.y + 1) * 320 + (start.x + 1);
 				*(pfbdata + offset) = color;
 				offset = (start.y +1) * 320 + start.x;
 				*(pfbdata + offset) = color;
@@ -751,11 +751,13 @@ void FreeDraw(unsigned short color)
 				offset = (start.y - 1) * 320 + (start.x + 1);
 				*(pfbdata + offset) = color;
 				offset = (start.y +1) * 320 + (start.x-1);
+				*(pfbdata + offset) = color;
+				/*offset = start.y * 320 + start.x;
 				*(pfbdata + offset) = color;*/
 			}
 		}
 	}
-	PrintDrawArea();
+	//PrintDrawArea();
 }
 
 void Selete()
@@ -1002,10 +1004,28 @@ void Erase() {
 				DrawArea[start.x - 1 - 80][start.y - 4] = white;
 				DrawArea[start.x + 1 - 80][start.y - 1 - 4] = white;
 				DrawArea[start.x + 1 - 80][start.y + 1 - 4] = white;
+				offset = (start.y + 1) * 320 + (start.x + 1);
+				*(pfbdata + offset) = white;
+				offset = (start.y +1) * 320 + start.x;
+				*(pfbdata + offset) = white;
+				offset = start.y * 320 + (start.x+1);
+				*(pfbdata + offset) = white;
+				offset = start.y * 320 + start.x;
+				*(pfbdata + offset) = white;
+				offset = (start.y -1) * 320 + (start.x -1);
+				*(pfbdata + offset) = white;
+				offset = (start.y -1) * 320 + start.x;
+				*(pfbdata + offset) = white;
+				offset = start.y * 320 + (start.x-1);
+				*(pfbdata + offset) = white;
+				offset = (start.y - 1) * 320 + (start.x + 1);
+				*(pfbdata + offset) = white;
+				offset = (start.y +1) * 320 + (start.x-1);
+				*(pfbdata + offset) = white;
 			}
 		}
 	}
-	PrintDrawArea();
+	//PrintDrawArea();
 }
 
 void clearDraw() {
