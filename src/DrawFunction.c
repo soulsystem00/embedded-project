@@ -713,51 +713,75 @@ void Oval(unsigned short color)
 
 void FreeDraw(unsigned short color)
 {
-	read(fd, &ie, sizeof(struct input_event));
-	unsigned short tmp[194][233];
-	if (ie.type == 3)
+	int count = 0;
+	int addx = 0;
+	int addy = 0;
+	int i, x1, y1;
+	Point l;
+	l.x = 0; l.y = 0;
+	int chk = 0;
+	int dx = 0; int dy = 0;
+	while (1)
 	{
-		if (ie.code == 0) get.x = ie.value;
-		if (ie.code == 1) get.y = ie.value;
-		if (ie.code == 24)
+		read(fd, &ie, sizeof(struct input_event));
+		//unsigned short tmp[194][233];
+		if (ie.type == 3)
 		{
-			start.x = a * get.x + b * get.y + c;
-			start.y = d * get.x + e * get.y + f;
-			if ((start.x >= 80 && start.x <= 273) && (start.y >= 4 && start.y <= 236))
+			if (ie.code == 0) get.x = ie.value;
+			if (ie.code == 1) get.y = ie.value;
+			if (ie.code == 24)
 			{
-				DrawArea[start.x + 1 - 80][start.y + 1 - 4] = color;
-				DrawArea[start.x - 80][start.y + 1 - 4] = color;
-				DrawArea[start.x + 1 - 80][start.y - 4] = color;
-				DrawArea[start.x - 80][start.y - 4] = color;
-				DrawArea[start.x - 1 - 80][start.y - 1 - 4] = color;
-				DrawArea[start.x - 80][start.y - 1 - 4] = color;
-				DrawArea[start.x - 1 - 80][start.y - 4] = color;
-				DrawArea[start.x + 1 - 80][start.y - 1 - 4] = color;
-				DrawArea[start.x + 1 - 80][start.y + 1 - 4] = color;
-				offset = (start.y + 1) * 320 + (start.x + 1);
-				*(pfbdata + offset) = color;
-				offset = (start.y +1) * 320 + start.x;
-				*(pfbdata + offset) = color;
-				offset = start.y * 320 + (start.x+1);
-				*(pfbdata + offset) = color;
-				offset = start.y * 320 + start.x;
-				*(pfbdata + offset) = color;
-				offset = (start.y -1) * 320 + (start.x -1);
-				*(pfbdata + offset) = color;
-				offset = (start.y -1) * 320 + start.x;
-				*(pfbdata + offset) = color;
-				offset = start.y * 320 + (start.x-1);
-				*(pfbdata + offset) = color;
-				offset = (start.y - 1) * 320 + (start.x + 1);
-				*(pfbdata + offset) = color;
-				offset = (start.y +1) * 320 + (start.x-1);
-				*(pfbdata + offset) = color;
-				/*offset = start.y * 320 + start.x;
-				*(pfbdata + offset) = color;*/
+				
+				start.x = a * get.x + b * get.y + c;
+				start.y = d * get.x + e * get.y + f;
+				if (chk == 0) {
+					l = start;
+				}
+				if ((start.x >= 80 && start.x <= 273) && (start.y >= 4 && start.y <= 236))
+				{
+					pressure = ie.value;
+					dx = l.x - start.x; dy = l.y - start.y;
+					x1 = start.x; y1 = start.y;
+					if (dx < 0) { addx = -1; dx = -dx; }
+					else { addx = 1; }
+					if (dy < 0) { addy = -1;  dy = -dy; }
+					else { addy = 1; }
+
+					if (dx >= dy) {
+						for (i = 0; i < dx; i++) {
+							x1 += addx;
+							count += dy;
+							if (count >= dx) {
+								y1 += addy;
+								count -= dx;
+							}
+								*(pfbdata + x1 + y1 * 320) = color;
+								DrawArea[x1 -80][y1 -4] = color;
+						}
+						chk = 1;
+					}//end of dx >= dy
+					else {
+						for (i = 0; i < dy; i++) {
+							y1 += addy; count += dx;
+							if (count >= dy) {
+								x1 += addx; count -= dy;
+							}
+								*(pfbdata + x1 + y1 * 320) = color;
+								DrawArea[x1 - 80][y1 - 4] = color;
+						}
+						chk = 1;
+					}
+
+					if (pressure == 0) {
+						chk = 0;
+						break;
+					}
+				}
+				else break;
 			}
 		}
+		l = start;
 	}
-	//PrintDrawArea();
 }
 
 void Selete()
@@ -983,49 +1007,76 @@ void Selete()
 }
 
 void Erase() {
-	read(fd, &ie, sizeof(struct input_event));
-
-	if (ie.type == 3)
+	int count = 0;
+	int addx = 0;
+	int addy = 0;
+	int i, x1, y1;
+	Point l;
+	l.x = 0; l.y = 0;
+	int chk = 0;
+	int dx = 0; int dy = 0;
+	while (1)
 	{
-		if (ie.code == 0) get.x = ie.value;
-		if (ie.code == 1) get.y = ie.value;
-		if (ie.code == 24)
+		read(fd, &ie, sizeof(struct input_event));
+		//unsigned short tmp[194][233];
+		if (ie.type == 3)
 		{
-			start.x = a * get.x + b * get.y + c;
-			start.y = d * get.x + e * get.y + f;
-			if ((start.x >= 80 && start.x <= 273) && (start.y >= 4 && start.y <= 236))
+			if (ie.code == 0) get.x = ie.value;
+			if (ie.code == 1) get.y = ie.value;
+			if (ie.code == 24)
 			{
-				DrawArea[start.x + 1 - 80][start.y + 1 - 4] = white;
-				DrawArea[start.x - 80][start.y + 1 - 4] = white;
-				DrawArea[start.x + 1 - 80][start.y - 4] = white;
-				DrawArea[start.x - 80][start.y - 4] = white;
-				DrawArea[start.x - 1 - 80][start.y - 1 - 4] = white;
-				DrawArea[start.x - 80][start.y - 1 - 4] = white;
-				DrawArea[start.x - 1 - 80][start.y - 4] = white;
-				DrawArea[start.x + 1 - 80][start.y - 1 - 4] = white;
-				DrawArea[start.x + 1 - 80][start.y + 1 - 4] = white;
-				offset = (start.y + 1) * 320 + (start.x + 1);
-				*(pfbdata + offset) = white;
-				offset = (start.y +1) * 320 + start.x;
-				*(pfbdata + offset) = white;
-				offset = start.y * 320 + (start.x+1);
-				*(pfbdata + offset) = white;
-				offset = start.y * 320 + start.x;
-				*(pfbdata + offset) = white;
-				offset = (start.y -1) * 320 + (start.x -1);
-				*(pfbdata + offset) = white;
-				offset = (start.y -1) * 320 + start.x;
-				*(pfbdata + offset) = white;
-				offset = start.y * 320 + (start.x-1);
-				*(pfbdata + offset) = white;
-				offset = (start.y - 1) * 320 + (start.x + 1);
-				*(pfbdata + offset) = white;
-				offset = (start.y +1) * 320 + (start.x-1);
-				*(pfbdata + offset) = white;
+				
+				start.x = a * get.x + b * get.y + c;
+				start.y = d * get.x + e * get.y + f;
+				if (chk == 0) {
+					l = start;
+				}
+				if ((start.x >= 80 && start.x <= 273) && (start.y >= 4 && start.y <= 236))
+				{
+					pressure = ie.value;
+					dx = l.x - start.x; dy = l.y - start.y;
+					x1 = start.x; y1 = start.y;
+					if (dx < 0) { addx = -1; dx = -dx; }
+					else { addx = 1; }
+					if (dy < 0) { addy = -1;  dy = -dy; }
+					else { addy = 1; }
+
+					if (dx >= dy) {
+						for (i = 0; i < dx; i++) {
+							x1 += addx;
+							count += dy;
+							if (count >= dx) {
+								y1 += addy;
+								count -= dx;
+							}
+								*(pfbdata + x1 + y1 * 320) = white;
+								DrawArea[x1 -80][y1 -4] = white;
+						}
+						chk = 1;
+					}//end of dx >= dy
+					else {
+						for (i = 0; i < dy; i++) {
+							y1 += addy; count += dx;
+							if (count >= dy) {
+								x1 += addx; count -= dy;
+							}
+								*(pfbdata + x1 + y1 * 320) = white;
+								DrawArea[x1 - 80][y1 - 4] = white;
+						}
+						chk = 1;
+					}
+
+					if (pressure == 0) {
+						chk = 0;
+						break;
+					}
+				}
+				else 
+					break;
 			}
 		}
+		l = start;
 	}
-	//PrintDrawArea();
 }
 
 void clearDraw() {
